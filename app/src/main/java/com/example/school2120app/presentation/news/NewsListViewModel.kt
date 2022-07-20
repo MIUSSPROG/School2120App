@@ -28,7 +28,7 @@ class NewsListViewModel @Inject constructor(private val getNewsListUsecase: GetN
 
     private var searchJob: Job? = null
 
-    fun getNews(count: Int = 100, query: String = ""){
+    fun getNews(count: Int = 100, query: String? = null){
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(500)

@@ -9,23 +9,19 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 
-class NewsRepositoryImpl(private val api: NewsApi): NewsRepository{
+class NewsRepositoryImpl(private val api: NewsApi) : NewsRepository {
 
-    override fun getNews(count: Int, query: String): Flow<Resource<List<News>>> = flow {
+    override fun getNews(count: Int, query: String?): Flow<Resource<List<News>>> = flow {
         emit(Resource.Loading())
         try {
-            if (query.isNotEmpty()) {
-                val remoteNewsInfo = api.getNews(count)
-                    .filter { it.name?.lowercase()?.startsWith(query.lowercase()) == true }
-                    .map { it.toNews() }
-                emit(Resource.Success(remoteNewsInfo))
-            }else{
-                val remoteNewsInfo = api.getNews(count).map { it.toNews() }
-                emit(Resource.Success(remoteNewsInfo))
-            }
-        }catch (e: HttpException){
+            val remoteNewsInfo = api.getNews(count)
+                .filter { query?.lowercase()?.let { it1 -> it.name?.lowercase()?.startsWith(it1) } ?: true }
+                .map { it.toNews() }
+            emit(Resource.Success(remoteNewsInfo))
+
+        } catch (e: HttpException) {
             emit(Resource.Error("Ошибка сервера ${e.message()}"))
-        }catch (e: IOException){
+        } catch (e: IOException) {
             emit(Resource.Error("Ошибка чтения ${e.message}"))
         }
     }
