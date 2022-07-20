@@ -23,6 +23,7 @@ buildscript {
         lifecycleVersion = "2.2.0"
         gsonVersion = "2.9.0"
         loggingInterceptorVersion = "5.0.0-alpha.3"
+        swipeRefreshLayoutVersion = "1.1.0"
     }
 
     dependencies {

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetNewsListUsecase(private val repository: NewsRepository) {
-    operator fun invoke(count: Int, query: String?): Flow<Resource<List<News>>>{
-        return repository.getNews(count, query)
+    operator fun invoke(count: Int, query: String?, fetchFromRemote: Boolean): Flow<Resource<List<News>>>{
+        return repository.getNews(count, query, fetchFromRemote)
     }
 }

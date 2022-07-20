@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.school2120app.R
+import com.example.school2120app.core.util.NewsListEvent
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.databinding.FragmentNewsListBinding
 import com.example.school2120app.presentation.news.adapter.NewsAdapter
@@ -26,8 +27,14 @@ class NewsListFragment: Fragment(R.layout.fragment_news_list) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentNewsListBinding.bind(view)
         binding.apply {
+
             rvNewsList.adapter = newsAdapter
             viewModel.getNews()
+            swipeRefreshLayout.setOnRefreshListener {
+                viewModel.onEvent(NewsListEvent.Refresh)
+                swipeRefreshLayout.isRefreshing = false
+            }
+
             viewModel.newsListLiveData.observe(viewLifecycleOwner){
                 when(it){
                     is Resource.Success -> {
@@ -61,7 +68,7 @@ class NewsListFragment: Fragment(R.layout.fragment_news_list) {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    viewModel.getNews(query = s.toString())
+                    viewModel.onEvent(NewsListEvent.OnSearchQueryChange(query = s.toString()))
                 }
 
                 override fun afterTextChanged(s: Editable?) {

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.school2120app.core.util.NewsListEvent
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.domain.usecase.GetNewsListUsecase
@@ -28,11 +29,24 @@ class NewsListViewModel @Inject constructor(private val getNewsListUsecase: GetN
 
     private var searchJob: Job? = null
 
-    fun getNews(count: Int = 100, query: String? = null){
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(500)
-            getNewsListUsecase(count, query).onEach { result ->
+    fun onEvent(event: NewsListEvent){
+        when(event){
+            is NewsListEvent.Refresh -> {
+                getNews(fetchFromRemote = true)
+            }
+            is NewsListEvent.OnSearchQueryChange -> {
+                searchJob?.cancel()
+                searchJob = viewModelScope.launch {
+                    delay(500)
+                    getNews(query = event.query)
+                }
+            }
+        }
+    }
+
+    fun getNews(count: Int = 100, query: String? = null, fetchFromRemote: Boolean = false){
+        viewModelScope.launch {
+            getNewsListUsecase(count, query, fetchFromRemote).onEach { result ->
                 when(result){
                     is Resource.Success -> {
                         _newsListLiveData.postValue(Resource.Success(result.data))

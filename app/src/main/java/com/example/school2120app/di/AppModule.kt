@@ -1,5 +1,8 @@
 package com.example.school2120app.di
 
+import android.app.Application
+import androidx.room.Room
+import com.example.school2120app.data.local.NewsDatabase
 import com.example.school2120app.data.remote.news.NewsApi
 import com.example.school2120app.data.repository.NewsRepositoryImpl
 import com.example.school2120app.domain.repository.NewsRepository
@@ -21,7 +24,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNewsApi(): NewsApi{
+    fun provideNewsApi(): NewsApi {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         val builder = OkHttpClient.Builder()
@@ -38,13 +41,19 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNewsRepository(api: NewsApi): NewsRepository{
-        return NewsRepositoryImpl(api)
+    fun provideNewsDatabase(app: Application): NewsDatabase {
+        return Room.databaseBuilder(app, NewsDatabase::class.java, "newsdb.db").build()
     }
 
     @Provides
     @Singleton
-    fun provideGetNewsListUsecase(repository: NewsRepository): GetNewsListUsecase{
+    fun provideNewsRepository(api: NewsApi, db: NewsDatabase): NewsRepository {
+        return NewsRepositoryImpl(api, db.dao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetNewsListUsecase(repository: NewsRepository): GetNewsListUsecase {
         return GetNewsListUsecase(repository)
     }
 }
