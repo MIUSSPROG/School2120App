@@ -61,7 +61,7 @@ class NewsListFragment: Fragment(R.layout.fragment_news_list) {
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    viewModel.onSearch(s.toString())
+                    viewModel.getNews(query = s.toString())
                 }
 
                 override fun afterTextChanged(s: Editable?) {

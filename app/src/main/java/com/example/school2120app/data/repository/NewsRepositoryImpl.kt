@@ -10,20 +10,24 @@ import retrofit2.HttpException
 import java.io.IOException
 
 class NewsRepositoryImpl(private val api: NewsApi): NewsRepository{
-    override fun getNews(count: Int): Flow<Resource<List<News>>> = flow {
+
+    override fun getNews(count: Int, query: String): Flow<Resource<List<News>>> = flow {
         emit(Resource.Loading())
         try {
-            val remoteNewsInfo = api.getNews(count).map { it.toNews() }
-            emit(Resource.Success(remoteNewsInfo))
+            if (query.isNotEmpty()) {
+                val remoteNewsInfo = api.getNews(count)
+                    .filter { it.name?.lowercase()?.startsWith(query.lowercase()) == true }
+                    .map { it.toNews() }
+                emit(Resource.Success(remoteNewsInfo))
+            }else{
+                val remoteNewsInfo = api.getNews(count).map { it.toNews() }
+                emit(Resource.Success(remoteNewsInfo))
+            }
         }catch (e: HttpException){
             emit(Resource.Error("Ошибка сервера ${e.message()}"))
         }catch (e: IOException){
             emit(Resource.Error("Ошибка чтения ${e.message}"))
         }
-    }
-
-    override fun filterNews(query: String): Flow<Resource<List<News>>> = flow {
-        emit(Resource.Loading())
     }
 
 }

@@ -28,9 +28,11 @@ class NewsListViewModel @Inject constructor(private val getNewsListUsecase: GetN
 
     private var searchJob: Job? = null
 
-    fun getNews(count: Int = 40){
-        viewModelScope.launch {
-            getNewsListUsecase(count).onEach { result ->
+    fun getNews(count: Int = 100, query: String = ""){
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(500)
+            getNewsListUsecase(count, query).onEach { result ->
                 when(result){
                     is Resource.Success -> {
                         _newsListLiveData.postValue(Resource.Success(result.data))
@@ -45,13 +47,6 @@ class NewsListViewModel @Inject constructor(private val getNewsListUsecase: GetN
                     }
                 }
             }.launchIn(this)
-        }
-    }
-
-    fun onSearch(query: String){
-        searchJob?.cancel()
-        searchJob = viewModelScope.launch {
-            delay(500)
         }
     }
 
