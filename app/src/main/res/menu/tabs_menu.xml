@@ -3,27 +3,27 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@id/newsListFragment"
+        android:id="@id/news_graph"
         android:title="Новости"
         android:icon="@drawable/ic_news"
         />
     <item
-        android:id="@+id/scheduleFragment"
+        android:id="@+id/schedule_graph"
         android:title="Расписание"
         android:icon="@drawable/ic_schedule"
         />
     <item
-        android:id="@id/profileFragment"
+        android:id="@id/profile_graph"
         android:title="Кабинет"
         android:icon="@drawable/ic_account_2"
         />
     <item
-        android:id="@id/menuFragment"
+        android:id="@id/menu_graph"
         android:title="Меню"
         android:icon="@drawable/ic_menu"
         />
     <item
-        android:id="@id/contactsFragment"
+        android:id="@id/contacts_graph"
         android:title="Контакты"
         android:icon="@drawable/ic_contacts"
         />

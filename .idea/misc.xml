@@ -8,10 +8,12 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/fragment_contacts.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/fragment_menu.xml" value="0.3421875" />
+        <entry key="app/src/main/res/layout/fragment_news_item.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_news_list.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/news_rv_item.xml" value="0.3421875" />
+        <entry key="app/src/main/res/layout/news_rv_item_detail.xml" value="0.4244791666666667" />
         <entry key="app/src/main/res/menu/tabs_menu.xml" value="0.3421875" />
       </map>
     </option>

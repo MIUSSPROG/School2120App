@@ -18,6 +18,7 @@ interface NewsDao {
         SELECT * 
         FROM newsentity
         WHERE LOWER(name) LIKE LOWER(:query) || '%'
+        ORDER BY id DESC
     """)
     suspend fun searchNews(query: String): List<NewsEntity>
 }
