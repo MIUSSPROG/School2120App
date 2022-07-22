@@ -12,7 +12,8 @@
         tools:layout="@layout/fragment_news_list" >
         <action
             android:id="@+id/action_newsListFragment_to_newsItemFragment"
-            app:destination="@id/newsItemFragment" />
+            app:destination="@id/newsItemFragment"
+            app:enterAnim="@anim/nav_default_enter_anim" />
     </fragment>
     <fragment
         android:id="@+id/newsItemFragment"

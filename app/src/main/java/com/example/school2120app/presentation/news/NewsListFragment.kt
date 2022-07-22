@@ -7,6 +7,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import com.example.school2120app.R
 import com.example.school2120app.core.util.ActionListener
@@ -25,8 +26,9 @@ class NewsListFragment: Fragment(R.layout.fragment_news_list) {
     private lateinit var binding: FragmentNewsListBinding
     private val newsAdapter by lazy { NewsAdapter(
         object : ActionListener<News> {
-            override fun itemClick(item: News) {
-                findNavController().navigate(NewsListFragmentDirections.actionNewsListFragmentToNewsItemFragment(item))
+            override fun onItemClicked(item: News, view: View?) {
+                val extras = FragmentNavigatorExtras(view!! to view.transitionName)
+                findNavController().navigate(NewsListFragmentDirections.actionNewsListFragmentToNewsItemFragment(item), extras)
             }
         }
     ) }

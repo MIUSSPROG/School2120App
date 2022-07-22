@@ -2,6 +2,7 @@ package com.example.school2120app.presentation.news
 
 import android.os.Bundle
 import android.text.Html
+import android.transition.ChangeBounds
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
@@ -23,7 +24,7 @@ class NewsItemFragment: Fragment(R.layout.fragment_news_item) {
 
         binding = FragmentNewsItemBinding.bind(view)
         news = args.news
-
+        sharedElementEnterTransition = ChangeBounds()
         binding.apply {
 
             val publishDateText = news?.publishDate?.split('T')?.get(0) ?: ""
@@ -33,5 +34,6 @@ class NewsItemFragment: Fragment(R.layout.fragment_news_item) {
             tvNewsItemDetailPublishDate.text = "$publishDateText "
             tvNewsItemDetailContent.text = htmlContent
         }
+
     }
 }

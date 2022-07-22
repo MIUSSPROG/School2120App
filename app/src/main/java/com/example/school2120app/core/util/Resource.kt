@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.text.Html
+import android.view.View
 import android.widget.TextView
 import com.example.school2120app.R
 import com.squareup.picasso.Picasso
@@ -23,8 +24,9 @@ sealed class NewsListEvent {
 }
 
 interface ActionListener<in T> {
-    fun itemClick(item: T)
+    fun onItemClicked(item: T, view: View? = null)
 }
+
 
 class PicassoImageGetter(
     private val textView: TextView,
