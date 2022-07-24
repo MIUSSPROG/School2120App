@@ -2,7 +2,9 @@ package com.example.school2120app.data.mapper
 
 import com.example.school2120app.data.local.NewsEntity
 import com.example.school2120app.data.remote.news.dto.NewsDto
+import com.example.school2120app.data.remote.schedule.dto.ScheduleItemDto
 import com.example.school2120app.domain.model.news.News
+import com.example.school2120app.domain.model.schedule.remote.ScheduleItem
 
 fun NewsEntity.toNews(): News{
     return News(
@@ -31,5 +33,12 @@ fun News.toNewsEntity(): NewsEntity{
         content = content,
         name = name,
         publishDate = publishDate
+    )
+}
+
+fun ScheduleItemDto.toItem(): ScheduleItem {
+    return ScheduleItem(
+        name = name,
+        fileUrl = file
     )
 }
