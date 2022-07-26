@@ -1,66 +1,185 @@
 package com.example.school2120app.data.xlsx
 
+import android.util.Log
+import com.example.school2120app.domain.model.schedule.local.LessonInfo
 import com.example.school2120app.domain.model.schedule.local.Schedule
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
+import com.example.school2120app.domain.model.schedule.local.Weekday
+import org.apache.poi.ss.usermodel.Cell
+import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.time.MonthDay
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
+
+    private lateinit var schedules: ArrayList<Schedule>
+    private lateinit var grades: ArrayList<String>
+    private lateinit var letters: ArrayList<String>
+    private lateinit var curWeekday: String
+
     override suspend fun parse(stream: InputStream): List<ScheduleByBuilding> {
 
-        val schedules = ArrayList<Schedule>()
-        val grades = ArrayList<String>()
-        val letters = ArrayList<String>()
+        try {
+            schedules = ArrayList<Schedule>()
+            grades = ArrayList<String>()
+            letters = ArrayList<String>()
 
-        var isSchedulePassed: Boolean
-        var isMonday: Boolean
-        var isTuesday: Boolean
-        var isWednesday: Boolean
-        var isThursday: Boolean
-        var isFriday: Boolean
-        var isLessonNum: Boolean // начало строки с уроками
+            var isScheduleHeaderPassed: Boolean
+            var isScheduleClassList: Boolean
+            var isLesson: Boolean
 
-        var colNum: Int // количество классов в параллели
+            var classNum: Int // количество классов в параллели
+            var curClass: Int // текущий класс в параллели
+            var contentCell: String // содержимое ячейки
 
-        var curNum: Int // текущий класс в параллели
+            var lessonRoomArray: MutableList<String> // список кабинетов(в случае разделенного по подгруппам урока)
+            var lesson = ""
+            var room = "" // кабинет урока
 
-        var c1 = 0
-        var c2 = 0
-        var lessonRoom: Array<String?>
-        val lesson = ""
-        val room = ""
+            var letter = ""
+            var grade = ""
 
-//        val path = Paths.get(contentRoot)
-//        val file = Files.createTempFile(path, "schedule", ".xlsx")
-//        Files.write(file, stream.readBytes())
-        File(cachePath).walk().forEach {
-            val splitPath = it.toString().split('/')
-            if (splitPath[splitPath.size-1].startsWith("schedule")){
-                println("exist")
+            // проверка наличия файла schedule в папке cache
+            var isExisted = false
+            var schedulePath = ""
+            File(cachePath).walk().forEach {
+                val splitPath = it.toString().split('/')
+                if (splitPath[splitPath.size - 1].startsWith("schedule")) {
+                    isExisted = true
+                    schedulePath = it.toString()
+                    println(schedulePath)
+                    return@forEach
+                }
             }
-        }
-        val file = createTempFile(prefix = "schedule_", suffix = ".xlsx")
-        file.writeBytes(stream.readBytes())
-//        val fis = FileInputStream(file)
-//        val myWorkBook = XSSFWorkbook(fis)
-//        val numOfSheets = myWorkBook.numberOfSheets
-        return emptyList()
-//        stream.use { input ->
-//
-//        }
+            if (!isExisted) {
+                val path = Paths.get(cachePath)
+                val filePath = Files.createTempFile(path, "schedule_", ".xlsx")
+                Files.write(filePath, stream.readBytes()).toString()
+                schedulePath = filePath.toString()
+            }
 
-//        val fis: FileInputStream = FileInputStream(stream)
-//        val myWorkBook = XSSFWorkbook(fis)
+            val fis = FileInputStream(schedulePath)
+            val myWorkBook = XSSFWorkbook(fis)
+            val numOfSheets = myWorkBook.numberOfSheets
+
+            // читаем листы xlsx файла
+            for (sheetNum in 0 until numOfSheets) {
+
+                isScheduleHeaderPassed = false
+                isScheduleClassList = false
+                isLesson = false
+
+                val curSheet = myWorkBook.getSheetAt(sheetNum)
+                val rowIterator: Iterator<Row> = curSheet.iterator()
+                classNum = 0
+
+                while (rowIterator.hasNext()) {
+                    curClass = 0
+                    if (isScheduleHeaderPassed) {
+                        isScheduleClassList = true
+                        isScheduleHeaderPassed = false
+                    }
+
+                    val row = rowIterator.next()
+                    val cellIterator = row.cellIterator()
+                    while (cellIterator.hasNext()) {
+                        val cell = cellIterator.next()
+                        when (cell.cellType) {
+                            Cell.CELL_TYPE_STRING -> {
+                                contentCell = cell.stringCellValue.trim()
+                                if (contentCell.contains("Утверждено")) break
+                                if (contentCell.contains("Расписание")) {
+                                    isScheduleHeaderPassed = true // строка с заголовком расписания пройдена
+                                    break
+                                }
+                                if (contentCell in listOf(Monday, Tuesday, Wednesday, Thursday, Friday)) {
+                                    isScheduleClassList = false
+                                    for (schedule in schedules) {
+                                        if (contentCell == Monday) { // на первом проходе выделяем память для списка уроков текущего дня под все классы
+                                            schedule.weekdayLessons = mutableMapOf()
+                                        }
+                                        curWeekday = contentCell
+                                        schedule.weekdayLessons!![curWeekday] = mutableListOf()
+                                    }
+                                    isLesson = true
+                                    continue
+                                }
+
+                                if (isScheduleClassList) { // строка с перечнем классов в параллели
+                                    grade = ""
+                                    letter = ""
+                                    classNum++
+                                    when (contentCell.length) {
+                                        2 -> {
+                                            grade = contentCell[0].toString() // 9а
+                                            letter = contentCell[1].toString()
+                                        }
+                                        3 -> {
+                                            grade = contentCell.substring(0..1) // 10а
+                                            letter = contentCell[2].toString()
+                                        }
+                                    }
+                                    val schedule = Schedule(grade = grade, letter = letter)
+                                    schedules.add(schedule)
+
+                                } else {
+                                    contentCell = contentCell.trim().replace("-", "") // окна отмечаются ---
+                                    lessonRoomArray = contentCell.split(" ").filter { it.isNotEmpty() }.toMutableList()
+                                    if (lessonRoomArray.isEmpty()) {
+                                        lesson = emptyLesson
+                                        room = emptyRoom
+                                    } else if (contentCell.contains("физическая культура")) {
+                                        lesson = "физическая культура"
+                                        room = "спортзал"
+                                    } else {
+                                        room = lessonRoomArray.removeLast()
+                                        lesson = lessonRoomArray.reduce{a, b -> "$a $b"}
+                                        Log.d("lesson", "$sheetNum $curClass $curWeekday $lesson $room")
+                                    }
+
+                                    schedules[curClass].weekdayLessons?.get(curWeekday)?.add(LessonInfo(name = lesson, room = room))
+                                    curClass++
+                                }
+                            }
+
+//                        Cell.CELL_TYPE_NUMERIC -> {
+//                        }
+//
+                        Cell.CELL_TYPE_BLANK -> {
+                            if (isLesson && curClass != 0){
+                                curClass++
+                            }
+                        }
+
+                        }
+                    }
+                }
+            }
+        }catch (e: Exception){
+            println(schedules)
+            println(e.message)
+        }
+        return emptyList()
+
     }
 
     companion object{
-        val cachePath = "/data/data/com.example.school2120app/cache"
+        const val cachePath = "/data/data/com.example.school2120app/cache"
+        const val emptyLesson = "-------------------------"
+        const val emptyRoom = ""
+        const val Monday = "Понедельник"
+        const val Tuesday = "Вторник"
+        const val Wednesday = "Среда"
+        const val Thursday = "Четверг"
+        const val Friday = "Пятница"
     }
 }

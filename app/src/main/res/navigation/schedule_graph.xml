@@ -9,5 +9,14 @@
         android:id="@+id/scheduleFragment"
         android:name="com.example.school2120app.presentation.schedule.ScheduleFragment"
         android:label="fragment_schedule"
-        tools:layout="@layout/fragment_schedule" />
+        tools:layout="@layout/fragment_schedule" >
+        <action
+            android:id="@+id/action_scheduleFragment_to_chooseOptionsFragment"
+            app:destination="@id/chooseOptionsFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/chooseOptionsFragment"
+        android:name="com.example.school2120app.presentation.schedule.ChooseOptionsFragment"
+        android:label="fragment_choose_options"
+        tools:layout="@layout/fragment_choose_options" />
 </navigation>

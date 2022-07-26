@@ -1,6 +1,7 @@
 package com.example.school2120app.domain.model.schedule.local
 
 data class Weekday(
-    val weekday: String,
-    val lessons: List<LessonInfo>
+    val weekdayLessons: Map<String, MutableList<LessonInfo>>
+//    val weekday: String,
+//    var lessons: MutableList<LessonInfo>? = null
 )
