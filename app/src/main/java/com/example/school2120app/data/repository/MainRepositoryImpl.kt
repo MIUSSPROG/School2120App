@@ -2,7 +2,8 @@ package com.example.school2120app.data.repository
 
 import android.util.Log
 import com.example.school2120app.core.util.Resource
-import com.example.school2120app.data.local.NewsDao
+import com.example.school2120app.data.local.news.NewsDao
+import com.example.school2120app.data.local.schedule.*
 import com.example.school2120app.data.mapper.toItem
 import com.example.school2120app.data.mapper.toNews
 import com.example.school2120app.data.mapper.toNewsEntity
@@ -12,18 +13,18 @@ import com.example.school2120app.data.remote.schedule.ScheduleApi.Companion.SCHE
 import com.example.school2120app.data.xlsx.XlsxParser
 import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
-import com.example.school2120app.domain.model.schedule.remote.ScheduleItem
 import com.example.school2120app.domain.repository.MainRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
-import java.lang.Exception
 
 class MainRepositoryImpl(
     private val newsApi: NewsApi,
     private val scheduleApi: ScheduleApi,
-    private val dao: NewsDao,
+    private val newsDao: NewsDao,
+    private val scheduleDao: ScheduleDao,
     private val scheduleParser: XlsxParser<ScheduleByBuilding>
 ) : MainRepository {
 
@@ -34,7 +35,7 @@ class MainRepositoryImpl(
         fetchFromRemote: Boolean
     ): Flow<Resource<List<News>>> = flow {
         emit(Resource.Loading())
-        val localNewsList = dao.searchNews(query ?: "")
+        val localNewsList = newsDao.searchNews(query ?: "")
         val isDbEmpty = localNewsList.isEmpty()
         val loadFromCache = !isDbEmpty && !fetchFromRemote
         if (loadFromCache) {
@@ -63,12 +64,12 @@ class MainRepositoryImpl(
 
         try {
             remoteNewsInfo?.let { newsList ->
-                dao.clearNewsList()
-                dao.insertNewsList(
+                newsDao.clearNewsList()
+                newsDao.insertNewsList(
                     newsList.map { it.toNewsEntity() }
                 )
                 emit(Resource.Success(
-                    data = dao.searchNews("").map { it.toNews() }
+                    data = newsDao.searchNews("").map { it.toNews() }
                 ))
             }
         } catch (e: Exception) {
@@ -85,9 +86,20 @@ class MainRepositoryImpl(
                     it.toItem()
                 }
                 .first()
-//            downloadScheduleFile(scheduleInfo.fileUrl)
+
             val fileByteStream = scheduleApi.downloadScheduleFile(scheduleInfo.fileUrl).byteStream()
             val scheduleParsed =  scheduleParser.parse(fileByteStream)
+            scheduleDao.insertBuilding(ScheduleBuildingEntity(building = building))
+            val scheduleList = scheduleParsed.scheduleList
+            for (schedule in scheduleList){
+                val gradeId = scheduleDao.insertGradeInfo(ScheduleGradeEntity(grade = schedule.grade, letter = schedule.letter, building = building))
+                val lessonsByWeekday = schedule.weekdayLessons
+                lessonsByWeekday?.forEach{ (weekday, lessons) ->
+                    for (lesson in lessons){
+                        scheduleDao.insertLesson(ScheduleLessonEntity(name = lesson.name, room = lesson.room, weekday = weekday, gradeId = gradeId.toInt()))
+                    }
+                }
+            }
             emit(Resource.Success(scheduleParsed))
 
         } catch (e: HttpException) {
@@ -96,6 +108,11 @@ class MainRepositoryImpl(
         } catch (e: IOException) {
             emit(Resource.Error("Ошибка чтения ${e.message}"))
             Log.d("Error", e.message!!)
+        }catch (e: Exception){
+            emit(Resource.Error("Ошибка ${e.message}"))
+            Log.d("Error", e.message!!)
+            Log.d("Error", e.localizedMessage)
+            Log.d("Error", e.stackTraceToString())
         }
     }
 

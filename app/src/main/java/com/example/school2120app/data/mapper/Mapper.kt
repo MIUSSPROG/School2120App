@@ -1,6 +1,6 @@
 package com.example.school2120app.data.mapper
 
-import com.example.school2120app.data.local.NewsEntity
+import com.example.school2120app.data.local.news.NewsEntity
 import com.example.school2120app.data.remote.news.dto.NewsDto
 import com.example.school2120app.data.remote.schedule.dto.ScheduleItemDto
 import com.example.school2120app.domain.model.news.News
@@ -26,7 +26,7 @@ fun NewsDto.toNews(): News{
     )
 }
 
-fun News.toNewsEntity(): NewsEntity{
+fun News.toNewsEntity(): NewsEntity {
     return NewsEntity(
         id = id,
         anons = anons,

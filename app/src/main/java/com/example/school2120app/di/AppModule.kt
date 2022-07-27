@@ -2,11 +2,10 @@ package com.example.school2120app.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.school2120app.data.local.NewsDatabase
+import com.example.school2120app.data.local.MainDatabase
 import com.example.school2120app.data.remote.news.NewsApi
 import com.example.school2120app.data.remote.schedule.ScheduleApi
 import com.example.school2120app.data.repository.MainRepositoryImpl
-import com.example.school2120app.data.xlsx.ScheduleParser
 import com.example.school2120app.data.xlsx.XlsxParser
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.repository.MainRepository
@@ -62,14 +61,14 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNewsDatabase(app: Application): NewsDatabase {
-        return Room.databaseBuilder(app, NewsDatabase::class.java, "newsdb.db").build()
+    fun provideNewsDatabase(app: Application): MainDatabase {
+        return Room.databaseBuilder(app, MainDatabase::class.java, "newsdb.db").build()
     }
 
     @Provides
     @Singleton
-    fun provideNewsRepository(newsApi: NewsApi, scheduleApi: ScheduleApi, db: NewsDatabase, scheduleParser: XlsxParser<ScheduleByBuilding>): MainRepository {
-        return MainRepositoryImpl(newsApi, scheduleApi, db.dao, scheduleParser)
+    fun provideNewsRepository(newsApi: NewsApi, scheduleApi: ScheduleApi, db: MainDatabase, scheduleParser: XlsxParser<ScheduleByBuilding>): MainRepository {
+        return MainRepositoryImpl(newsApi, scheduleApi, newsDao = db.daoNews, scheduleDao = db.daoSchedule, scheduleParser)
     }
 
     @Provides

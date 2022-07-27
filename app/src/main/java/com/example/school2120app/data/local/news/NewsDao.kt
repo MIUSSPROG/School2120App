@@ -1,4 +1,4 @@
-package com.example.school2120app.data.local
+package com.example.school2120app.data.local.news
 
 import androidx.room.Dao
 import androidx.room.Insert

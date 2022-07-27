@@ -13,6 +13,7 @@ import com.example.school2120app.R
 import com.example.school2120app.core.util.ActionListener
 import com.example.school2120app.core.util.NewsListEvent
 import com.example.school2120app.core.util.Resource
+import com.example.school2120app.core.util.UIEvent
 import com.example.school2120app.databinding.FragmentNewsListBinding
 import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.presentation.news.adapter.NewsAdapter
@@ -61,7 +62,7 @@ class NewsListFragment: Fragment(R.layout.fragment_news_list) {
             lifecycleScope.launchWhenCreated {
                 viewModel.eventFlow.collectLatest { event ->
                     when(event){
-                        is NewsListViewModel.UIEvent.ShowSnackbar -> {
+                        is UIEvent.ShowSnackbar -> {
                             Snackbar.make(this@apply.root, event.message, Snackbar.LENGTH_SHORT).show()
                         }
                     }
