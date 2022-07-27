@@ -51,6 +51,8 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
             var letter = ""
             var grade = ""
 
+            var curClassCount = 0
+
             // проверка наличия файла schedule в папке cache
             var isExisted = false
             var schedulePath = ""
@@ -158,7 +160,7 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
 //                                        Log.d("lesson", "$sheetNum $curClass $curWeekday $lesson $room")
                                     }
 
-                                    schedules[curClass].weekdayLessons?.get(curWeekday)?.add(LessonInfo(name = lesson, room = room))
+                                    schedules[curClassCount + curClass].weekdayLessons?.get(curWeekday)?.add(LessonInfo(name = lesson, room = room))
                                     curClass++
                                 }
                             }
@@ -175,17 +177,18 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
                         }
                     }
                 }
+                curClassCount += classNum
             }
             println(schedules)
-//            for (schedule in schedules){
-//                println("${schedule.grade} ${schedule.letter}")
-//                for (weekday in schedule.weekdayLessons!!){
-//                    println(weekday.key)
-//                    for (lesson in weekday.value){
-//                        println("${lesson.name} ${lesson.room}")
-//                    }
-//                }
-//            }
+            for (schedule in schedules){
+                println("${schedule.grade} ${schedule.letter}")
+                for (weekday in schedule.weekdayLessons!!){
+                    println(weekday.key)
+                    for (lesson in weekday.value){
+                        println("${lesson.name} ${lesson.room}")
+                    }
+                }
+            }
         }catch (e: Exception){
 //            println(schedules)
             println(e.message)
@@ -195,7 +198,7 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
             println(e.stackTrace)
 
         }
-        return emptyList()
+        return listOf(ScheduleByBuilding(building = "ш4", scheduleList = schedules))
 
     }
 
