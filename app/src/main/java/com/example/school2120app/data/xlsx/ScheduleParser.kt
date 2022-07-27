@@ -25,6 +25,9 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
     private lateinit var grades: ArrayList<String>
     private lateinit var letters: ArrayList<String>
     private lateinit var curWeekday: String
+    private lateinit var lessonRoomArray: MutableList<String>
+    private lateinit var contentCell: String
+    private lateinit var curSheetNum: String
 
     override suspend fun parse(stream: InputStream): List<ScheduleByBuilding> {
 
@@ -39,9 +42,9 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
 
             var classNum: Int // количество классов в параллели
             var curClass: Int // текущий класс в параллели
-            var contentCell: String // содержимое ячейки
+//            var contentCell: String // содержимое ячейки
 
-            var lessonRoomArray: MutableList<String> // список кабинетов(в случае разделенного по подгруппам урока)
+//            var lessonRoomArray: MutableList<String> // список кабинетов(в случае разделенного по подгруппам урока)
             var lesson = ""
             var room = "" // кабинет урока
 
@@ -72,8 +75,8 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
             val numOfSheets = myWorkBook.numberOfSheets
 
             // читаем листы xlsx файла
-            for (sheetNum in 0 until numOfSheets) {
-
+            for (sheetNum in 0 until numOfSheets) { // numOfSheets
+                curSheetNum = sheetNum.toString()
                 isScheduleHeaderPassed = false
                 isScheduleClassList = false
                 isLesson = false
@@ -103,7 +106,8 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
                                 }
                                 if (contentCell in listOf(Monday, Tuesday, Wednesday, Thursday, Friday)) {
                                     isScheduleClassList = false
-                                    for (schedule in schedules) {
+                                    val lastClasses = schedules.takeLast(classNum)
+                                    for (schedule in lastClasses) {
                                         if (contentCell == Monday) { // на первом проходе выделяем память для списка уроков текущего дня под все классы
                                             schedule.weekdayLessons = mutableMapOf()
                                         }
@@ -140,10 +144,18 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
                                     } else if (contentCell.contains("физическая культура")) {
                                         lesson = "физическая культура"
                                         room = "спортзал"
-                                    } else {
+                                    }else if (contentCell.contains("профил.труд")){
+                                        lesson = "профил.труд"
+                                        room = "мастерская"
+                                    }
+                                    else if (lessonRoomArray.size == 1){
+                                        lesson = lessonRoomArray.removeLast()
+                                        room = "Уточняйте у преподавателя"
+                                    }
+                                    else {
                                         room = lessonRoomArray.removeLast()
                                         lesson = lessonRoomArray.reduce{a, b -> "$a $b"}
-                                        Log.d("lesson", "$sheetNum $curClass $curWeekday $lesson $room")
+//                                        Log.d("lesson", "$sheetNum $curClass $curWeekday $lesson $room")
                                     }
 
                                     schedules[curClass].weekdayLessons?.get(curWeekday)?.add(LessonInfo(name = lesson, room = room))
@@ -164,9 +176,24 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
                     }
                 }
             }
-        }catch (e: Exception){
             println(schedules)
+//            for (schedule in schedules){
+//                println("${schedule.grade} ${schedule.letter}")
+//                for (weekday in schedule.weekdayLessons!!){
+//                    println(weekday.key)
+//                    for (lesson in weekday.value){
+//                        println("${lesson.name} ${lesson.room}")
+//                    }
+//                }
+//            }
+        }catch (e: Exception){
+//            println(schedules)
             println(e.message)
+            println(lessonRoomArray)
+            println(contentCell)
+            println(curSheetNum)
+            println(e.stackTrace)
+
         }
         return emptyList()
 
