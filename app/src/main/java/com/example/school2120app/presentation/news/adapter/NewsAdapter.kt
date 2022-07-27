@@ -41,7 +41,6 @@ class NewsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
         val binding = NewsRvItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-//        binding.root.setOnClickListener(this)
         return NewsViewHolder(binding)
     }
 
@@ -52,9 +51,4 @@ class NewsAdapter(
         }
         holder.bind(curItem)
     }
-
-//    override fun onClick(v: View) {
-//        val news = v.tag as News
-//        actionListener.onItemClicked(news, v)
-//    }
 }

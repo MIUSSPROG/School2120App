@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.UIEvent
+import com.example.school2120app.domain.model.schedule.local.GradeLesson
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.usecase.GetScheduleUsecase
 import com.example.school2120app.presentation.news.NewsListViewModel
@@ -21,15 +22,15 @@ import javax.inject.Inject
 @HiltViewModel
 class ScheduleViewModel @Inject constructor(private val getScheduleUsecase: GetScheduleUsecase): ViewModel() {
 
-    private val _scheduleData = MutableLiveData<Resource<ScheduleByBuilding>>()
-    val scheduleData: LiveData<Resource<ScheduleByBuilding>> = _scheduleData
+    private val _scheduleData = MutableLiveData<Resource<List<GradeLesson>>>()
+    val scheduleData: LiveData<Resource<List<GradeLesson>>> = _scheduleData
 
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun getSchedule(building: String){
+    fun getSchedule(building: String, grade: String, letter: String, weekday: String, fetchFromRemote: Boolean){
         viewModelScope.launch {
-            getScheduleUsecase(building).onEach { result ->
+            getScheduleUsecase(building = building, grade = grade, letter = letter, weekday = weekday, fetchFromRemote = fetchFromRemote).onEach { result ->
                 when(result){
                     is Resource.Success -> {
                         _scheduleData.postValue(Resource.Success(result.data))

@@ -19,26 +19,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSchedule"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayoutSchedule"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="80dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnChooseScheduleOption"
-        tools:listitem="@layout/schedule_rv_item" />
+        app:layout_constraintTop_toBottomOf="@+id/btnChooseScheduleOption">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSchedule"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/schedule_rv_item" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <ProgressBar
         android:id="@+id/progressBarLoadingSchedule"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="invisible"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/rvSchedule"
-        app:layout_constraintStart_toStartOf="@+id/rvSchedule"
+        app:layout_constraintEnd_toEndOf="@+id/swipeRefreshLayoutSchedule"
+        app:layout_constraintStart_toStartOf="@+id/swipeRefreshLayoutSchedule"
         app:layout_constraintTop_toBottomOf="@+id/btnChooseScheduleOption"
         app:layout_constraintVertical_bias="0.5" />
 
@@ -50,10 +59,10 @@
         android:layout_marginEnd="20dp"
         android:scaleType="fitCenter"
         android:src="@drawable/schedule2"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/rvSchedule"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/swipeRefreshLayoutSchedule"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/rvSchedule"
+        app:layout_constraintStart_toStartOf="@+id/swipeRefreshLayoutSchedule"
         app:layout_constraintTop_toBottomOf="@+id/btnChooseScheduleOption" />
 
     <androidx.constraintlayout.widget.ConstraintLayout

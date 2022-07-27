@@ -12,9 +12,9 @@ import com.example.school2120app.data.remote.schedule.ScheduleApi
 import com.example.school2120app.data.remote.schedule.ScheduleApi.Companion.SCHEDULE_ACCESS_TOKEN
 import com.example.school2120app.data.xlsx.XlsxParser
 import com.example.school2120app.domain.model.news.News
+import com.example.school2120app.domain.model.schedule.local.GradeLesson
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.repository.MainRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -77,20 +77,29 @@ class MainRepositoryImpl(
         }
     }
 
-    override fun getSchedule(building: String): Flow<Resource<ScheduleByBuilding>> = flow {
+    override fun getSchedule(grade: String, letter: String, building: String, weekday: String, fetchFromRemote: Boolean): Flow<Resource<List<GradeLesson>>> = flow {
         emit(Resource.Loading())
         try {
-            val scheduleInfo = scheduleApi.getAllFiles(SCHEDULE_ACCESS_TOKEN).scheduleItems
+            var localScheduleList = scheduleDao.getSchedule(grade, letter, building, weekday)
+            val isDbEmpty = localScheduleList.isEmpty()
+            val loadFromCache = !isDbEmpty && !fetchFromRemote
+            if (loadFromCache){
+                localScheduleList = scheduleDao.getSchedule(grade, letter, building, weekday)
+                emit(Resource.Success(data = localScheduleList))
+                return@flow
+            }
+
+            val remoteScheduleInfo = scheduleApi.getAllFiles(SCHEDULE_ACCESS_TOKEN).scheduleItems
                 .filter { it.path.split("/")[1] == "ТестРасписание" } // building вместо ТестРасписание
                 .map {
                     it.toItem()
                 }
                 .first()
 
-            val fileByteStream = scheduleApi.downloadScheduleFile(scheduleInfo.fileUrl).byteStream()
-            val scheduleParsed =  scheduleParser.parse(fileByteStream)
+            val scheduleFileByteStream = scheduleApi.downloadScheduleFile(remoteScheduleInfo.fileUrl).byteStream()
+            val remoteScheduleParsed =  scheduleParser.parse(scheduleFileByteStream)
             scheduleDao.insertBuilding(ScheduleBuildingEntity(building = building))
-            val scheduleList = scheduleParsed.scheduleList
+            val scheduleList = remoteScheduleParsed.scheduleList
             for (schedule in scheduleList){
                 val gradeId = scheduleDao.insertGradeInfo(ScheduleGradeEntity(grade = schedule.grade, letter = schedule.letter, building = building))
                 val lessonsByWeekday = schedule.weekdayLessons
@@ -100,7 +109,7 @@ class MainRepositoryImpl(
                     }
                 }
             }
-            emit(Resource.Success(scheduleParsed))
+            emit(Resource.Success(data = scheduleDao.getSchedule(building = building, grade = grade, letter = letter, weekday = weekday)))
 
         } catch (e: HttpException) {
             emit(Resource.Error("Ошибка сервера ${e.message()}"))
@@ -109,9 +118,8 @@ class MainRepositoryImpl(
             emit(Resource.Error("Ошибка чтения ${e.message}"))
             Log.d("Error", e.message!!)
         }catch (e: Exception){
-            emit(Resource.Error("Ошибка ${e.message}"))
+            emit(Resource.Error("Неизвестная ошибка ${e.message}"))
             Log.d("Error", e.message!!)
-            Log.d("Error", e.localizedMessage)
             Log.d("Error", e.stackTraceToString())
         }
     }

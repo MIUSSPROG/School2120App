@@ -42,9 +42,9 @@ class NewsListFragment: Fragment(R.layout.fragment_news_list) {
 
             rvNewsList.adapter = newsAdapter
             viewModel.getNews()
-            swipeRefreshLayout.setOnRefreshListener {
+            swipeRefreshLayoutNews.setOnRefreshListener {
                 viewModel.onEvent(NewsListEvent.Refresh)
-                swipeRefreshLayout.isRefreshing = false
+                swipeRefreshLayoutNews.isRefreshing = false
             }
 
             viewModel.newsListLiveData.observe(viewLifecycleOwner){

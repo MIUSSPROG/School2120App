@@ -26,7 +26,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/tvScheduleItemLesson"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -38,12 +38,12 @@
                 android:textColor="@color/blue_black"
                 android:textSize="@dimen/header_size"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/textView6"
+                app:layout_constraintEnd_toStartOf="@+id/tvScheduleItemRoom"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/tvScheduleItemRoom"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
@@ -52,9 +52,9 @@
                 android:textColor="@color/blue_dark"
                 android:textSize="@dimen/sub_header_size"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/textView4"
+                app:layout_constraintBottom_toBottomOf="@+id/tvScheduleItemLesson"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView4" />
+                app:layout_constraintTop_toTopOf="@+id/tvScheduleItemLesson" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
