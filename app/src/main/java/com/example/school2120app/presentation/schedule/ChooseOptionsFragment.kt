@@ -18,6 +18,8 @@ class ChooseOptionsFragment: BottomSheetDialogFragment() {
     ): View? {
         binding = FragmentChooseOptionsBinding.inflate(inflater, container, false)
 
+
+
         return binding.root
     }
 }

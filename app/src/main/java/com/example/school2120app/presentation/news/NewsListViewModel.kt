@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.school2120app.core.util.NewsListEvent
 import com.example.school2120app.core.util.Resource
+import com.example.school2120app.core.util.UIEvent
 import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.domain.usecase.GetNewsListUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,7 +56,8 @@ class NewsListViewModel @Inject constructor(private val getNewsListUsecase: GetN
                         _newsListLiveData.postValue(Resource.Loading())
                     }
                     is Resource.Error -> {
-                        _eventFlow.emit(UIEvent.ShowSnackbar(
+                        _eventFlow.emit(
+                            UIEvent.ShowSnackbar(
                             result.message ?: "Неизвестная ошибка"
                         ))
                     }
@@ -64,8 +66,5 @@ class NewsListViewModel @Inject constructor(private val getNewsListUsecase: GetN
         }
     }
 
-    sealed class UIEvent{
-        data class ShowSnackbar(val message: String): UIEvent()
-    }
 
 }

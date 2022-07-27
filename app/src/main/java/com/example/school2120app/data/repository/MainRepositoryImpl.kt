@@ -76,19 +76,19 @@ class MainRepositoryImpl(
         }
     }
 
-    override fun getSchedule(): Flow<Resource<ScheduleItem>> = flow {
+    override fun getSchedule(building: String): Flow<Resource<ScheduleByBuilding>> = flow {
         emit(Resource.Loading())
         try {
             val scheduleInfo = scheduleApi.getAllFiles(SCHEDULE_ACCESS_TOKEN).scheduleItems
-                .filter { it.path.split("/")[1] == "ТестРасписание" }
+                .filter { it.path.split("/")[1] == "ТестРасписание" } // building вместо ТестРасписание
                 .map {
                     it.toItem()
                 }
                 .first()
 //            downloadScheduleFile(scheduleInfo.fileUrl)
             val fileByteStream = scheduleApi.downloadScheduleFile(scheduleInfo.fileUrl).byteStream()
-            scheduleParser.parse(fileByteStream)
-            emit(Resource.Success(scheduleInfo))
+            val scheduleParsed =  scheduleParser.parse(fileByteStream)
+            emit(Resource.Success(scheduleParsed))
 
         } catch (e: HttpException) {
             emit(Resource.Error("Ошибка сервера ${e.message()}"))

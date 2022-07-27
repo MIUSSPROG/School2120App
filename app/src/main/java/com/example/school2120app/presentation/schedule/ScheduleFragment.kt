@@ -24,6 +24,6 @@ class ScheduleFragment: Fragment(R.layout.fragment_schedule) {
             val action = ScheduleFragmentDirections.actionScheduleFragmentToChooseOptionsFragment()
             findNavController().navigate(action)
         }
-        viewModel.getSchedule()
+//        viewModel.getSchedule("ш4")
     }
 }

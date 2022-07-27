@@ -29,7 +29,7 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
     private lateinit var contentCell: String
     private lateinit var curSheetNum: String
 
-    override suspend fun parse(stream: InputStream): List<ScheduleByBuilding> {
+    override suspend fun parse(stream: InputStream): ScheduleByBuilding {
 
         try {
             schedules = ArrayList<Schedule>()
@@ -179,16 +179,16 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
                 }
                 curClassCount += classNum
             }
-            println(schedules)
-            for (schedule in schedules){
-                println("${schedule.grade} ${schedule.letter}")
-                for (weekday in schedule.weekdayLessons!!){
-                    println(weekday.key)
-                    for (lesson in weekday.value){
-                        println("${lesson.name} ${lesson.room}")
-                    }
-                }
-            }
+//            println(schedules)
+//            for (schedule in schedules){
+//                println("${schedule.grade} ${schedule.letter}")
+//                for (weekday in schedule.weekdayLessons!!){
+//                    println(weekday.key)
+//                    for (lesson in weekday.value){
+//                        println("${lesson.name} ${lesson.room}")
+//                    }
+//                }
+//            }
         }catch (e: Exception){
 //            println(schedules)
             println(e.message)
@@ -198,7 +198,7 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
             println(e.stackTrace)
 
         }
-        return listOf(ScheduleByBuilding(building = "ш4", scheduleList = schedules))
+        return ScheduleByBuilding(building = "ш4", scheduleList = schedules)
 
     }
 
