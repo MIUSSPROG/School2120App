@@ -9,10 +9,7 @@ import com.example.school2120app.data.repository.MainRepositoryImpl
 import com.example.school2120app.data.xlsx.XlsxParser
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.repository.MainRepository
-import com.example.school2120app.domain.usecase.GetNewsListUsecase
-import com.example.school2120app.domain.usecase.GetScheduleBuildingsUsecase
-import com.example.school2120app.domain.usecase.GetScheduleGradesUsecase
-import com.example.school2120app.domain.usecase.GetScheduleUsecase
+import com.example.school2120app.domain.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -95,6 +92,12 @@ object AppModule {
     @Singleton
     fun providesScheduleGradesUsecase(repository: MainRepository): GetScheduleGradesUsecase{
         return GetScheduleGradesUsecase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLoadScheduleUsecase(repository: MainRepository): LoadScheduleUsecase{
+        return LoadScheduleUsecase(repository)
     }
 
 }

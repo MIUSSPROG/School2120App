@@ -1,5 +1,6 @@
 package com.example.school2120app.data.repository
 
+import android.database.sqlite.SQLiteException
 import android.util.Log
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.data.local.news.NewsDao
@@ -89,6 +90,21 @@ class MainRepositoryImpl(
                 return@flow
             }
 
+            emit(Resource.Success(data = scheduleDao.getSchedule(building = "ш4", grade = grade, letter = letter, weekday = weekday)))
+
+        } catch (e: SQLiteException) {
+            emit(Resource.Error("Ошибка базы данных ${e.message}"))
+            Log.d("Error", e.message!!)
+        } catch (e: Exception){
+            emit(Resource.Error("Неизвестная ошибка ${e.message}"))
+            Log.d("Error", e.message!!)
+            Log.d("Error", e.stackTraceToString())
+        }
+    }
+
+    override fun loadSchedule(): Flow<Resource<Unit>> = flow {
+        emit(Resource.Loading())
+        try {
             val remoteScheduleInfo = scheduleApi.getAllFiles(SCHEDULE_ACCESS_TOKEN).scheduleItems
                 .filter { it.path.split("/")[1] == "ТестРасписание" } // building вместо ТестРасписание
                 .map {
@@ -109,9 +125,8 @@ class MainRepositoryImpl(
                     }
                 }
             }
-            emit(Resource.Success(data = scheduleDao.getSchedule(building = "ш4", grade = grade, letter = letter, weekday = weekday)))
-
-        } catch (e: HttpException) {
+            emit(Resource.Success(data = null))
+        }catch (e: HttpException) {
             emit(Resource.Error("Ошибка сервера ${e.message()}"))
             Log.d("Error", e.message())
         } catch (e: IOException) {
@@ -122,11 +137,6 @@ class MainRepositoryImpl(
             Log.d("Error", e.message!!)
             Log.d("Error", e.stackTraceToString())
         }
-    }
-
-    override fun downloadScheduleFile(fileUrl: String): Flow<Resource<Unit>> = flow {
-        val fileByteStream = scheduleApi.downloadScheduleFile(fileUrl).byteStream()
-        scheduleParser.parse(fileByteStream)
     }
 
     override fun getBuildings(): Flow<Resource<List<String>>>  = flow{

@@ -8,12 +8,14 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.school2120app.R
 import com.example.school2120app.core.util.Resource
+import com.example.school2120app.core.util.Resource.*
 import com.example.school2120app.core.util.UIEvent
 import com.example.school2120app.data.xlsx.ScheduleParser.Companion.Friday
 import com.example.school2120app.data.xlsx.ScheduleParser.Companion.Monday
@@ -65,10 +67,24 @@ class ScheduleFragment: Fragment(R.layout.fragment_schedule) {
             selectedGrade = prefs.prefGrade ?: ""
             selectedLetter = prefs.prefLetter ?: ""
 
-            viewModel.getSchedule(building = selectedBuilding, grade = selectedGrade, letter = selectedLetter, weekday = selectedWeekday, fetchFromRemote = false)
             if (selectedBuilding.isNotEmpty() && selectedGrade.isNotEmpty() && selectedLetter.isNotEmpty()) {
                 tvSelectedClass.visibility = VISIBLE
                 tvSelectedClass.text = "Класс:  $selectedGrade-$selectedLetter-$selectedBuilding"
+                viewModel.getSchedule(building = selectedBuilding, grade = selectedGrade, letter = selectedLetter, weekday = selectedWeekday, fetchFromRemote = false)
+            }else{
+                viewModel.loadSchedule()
+            }
+
+            viewModel.scheduleLoad.observe(viewLifecycleOwner){ result ->
+                when(result){
+                    is Loading -> {
+                        btnChooseScheduleOption.isEnabled = false
+                    }
+                    is Success -> {
+                        btnChooseScheduleOption.isEnabled = true
+                        progressBarLoadingSchedule.visibility = INVISIBLE
+                    }
+                }
             }
 
             parentFragmentManager.setFragmentResultListener(REQUEST_CODE, viewLifecycleOwner){ _, data ->
@@ -85,21 +101,22 @@ class ScheduleFragment: Fragment(R.layout.fragment_schedule) {
             }
 
             swipeRefreshLayoutSchedule.setOnRefreshListener {
+                viewModel.loadSchedule()
                 viewModel.getSchedule(building = selectedBuilding, grade = selectedGrade, letter = selectedLetter, weekday = selectedWeekday, fetchFromRemote = true)
                 swipeRefreshLayoutSchedule.isRefreshing = false
             }
 
             viewModel.scheduleData.observe(viewLifecycleOwner){
                 when(it){
-                    is Resource.Loading -> {
+                    is Loading -> {
                         progressBarLoadingSchedule.visibility = VISIBLE
                     }
-                    is Resource.Success -> {
+                    is Success -> {
                         scheduleAdapter.submitList(it.data)
                         progressBarLoadingSchedule.visibility = INVISIBLE
                         imgvImagePreview.visibility = INVISIBLE
                     }
-                    is Resource.Error -> {
+                    is Error -> {
                         progressBarLoadingSchedule.visibility = INVISIBLE
                     }
                 }

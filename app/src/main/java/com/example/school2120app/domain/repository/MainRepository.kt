@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 interface MainRepository {
     fun getNews(count: Int, query: String?, fetchFromRemote: Boolean): Flow<Resource<List<News>>>
     fun getSchedule(grade: String, letter: String, building: String, weekday: String, fetchFromRemote: Boolean): Flow<Resource<List<GradeLesson>>>
-    fun downloadScheduleFile(fileUrl: String): Flow<Resource<Unit>>
+    fun loadSchedule(): Flow<Resource<Unit>>
     fun getBuildings(): Flow<Resource<List<String>>>
     fun getGrades(building: String): Flow<Resource<List<String>>>
 }
