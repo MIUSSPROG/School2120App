@@ -22,4 +22,10 @@ interface ScheduleDao {
         WHERE sg.grade = :grade AND sg.letter = :letter AND sg.building = :building AND sl.weekday = :weekday
     """)
     suspend fun getSchedule(building: String, grade: String, letter: String, weekday: String): List<GradeLesson>
+
+    @Query("SELECT building FROM ScheduleBuildingEntity")
+    suspend fun getBuildings(): List<String>
+
+    @Query("SELECT grade || '-' || letter FROM ScheduleGradeEntity WHERE building = :building")
+    suspend fun getGrades(building: String): List<String>
 }

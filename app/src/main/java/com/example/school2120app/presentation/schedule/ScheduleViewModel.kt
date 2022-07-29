@@ -1,6 +1,5 @@
 package com.example.school2120app.presentation.schedule
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,9 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.UIEvent
 import com.example.school2120app.domain.model.schedule.local.GradeLesson
-import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.usecase.GetScheduleUsecase
-import com.example.school2120app.presentation.news.NewsListViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
