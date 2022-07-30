@@ -1,4 +1,4 @@
-package com.example.school2120app.data.remote.schedule.dto
+package com.example.school2120app.data.remote.yandexCloudDto
 
 
 import com.google.gson.annotations.SerializedName

@@ -1,9 +1,9 @@
-package com.example.school2120app.data.remote.schedule.dto
+package com.example.school2120app.data.remote.yandexCloudDto
 
 
 import com.google.gson.annotations.SerializedName
 
-data class ScheduleItemDto(
+data class FileItemDto(
     @SerializedName("antivirus_status")
     val antivirusStatus: String,
     @SerializedName("comment_ids")

@@ -1,10 +1,9 @@
 package com.example.school2120app.domain.repository
 
 import com.example.school2120app.core.util.Resource
+import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.domain.model.schedule.local.GradeLesson
-import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
-import com.example.school2120app.domain.model.schedule.remote.ScheduleItem
 import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
@@ -13,4 +12,5 @@ interface MainRepository {
     fun loadSchedule(): Flow<Resource<Unit>>
     fun getBuildings(): Flow<Resource<List<String>>>
     fun getGrades(building: String): Flow<Resource<List<String>>>
+    fun getMenus(): Flow<Resource<List<MenuItem>>>
 }

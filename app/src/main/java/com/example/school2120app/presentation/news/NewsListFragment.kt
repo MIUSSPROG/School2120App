@@ -50,8 +50,8 @@ class NewsListFragment: Fragment(R.layout.fragment_news_list) {
             viewModel.newsListLiveData.observe(viewLifecycleOwner){
                 when(it){
                     is Resource.Success -> {
-                        newsAdapter.submitList(it.data)
                         progressBarNews.visibility = View.INVISIBLE
+                        newsAdapter.submitList(it.data)
                     }
                     is Resource.Loading -> {
                         progressBarNews.visibility = View.VISIBLE

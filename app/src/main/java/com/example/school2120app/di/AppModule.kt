@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.room.Room
 import com.example.school2120app.data.local.MainDatabase
 import com.example.school2120app.data.remote.news.NewsApi
-import com.example.school2120app.data.remote.schedule.ScheduleApi
+import com.example.school2120app.data.remote.YandexCloudApi
 import com.example.school2120app.data.repository.MainRepositoryImpl
 import com.example.school2120app.data.xlsx.XlsxParser
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
@@ -43,7 +43,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideScheduleApi(): ScheduleApi{
+    fun provideScheduleApi(): YandexCloudApi {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         val builder = OkHttpClient.Builder()
@@ -51,11 +51,11 @@ object AppModule {
         val okHttpClient = builder.build()
 
         return Retrofit.Builder()
-            .baseUrl(ScheduleApi.BASE_URL)
+            .baseUrl(YandexCloudApi.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ScheduleApi::class.java)
+            .create(YandexCloudApi::class.java)
     }
 
     @Provides
@@ -66,8 +66,8 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNewsRepository(newsApi: NewsApi, scheduleApi: ScheduleApi, db: MainDatabase, scheduleParser: XlsxParser<ScheduleByBuilding>): MainRepository {
-        return MainRepositoryImpl(newsApi, scheduleApi, newsDao = db.daoNews, scheduleDao = db.daoSchedule, scheduleParser)
+    fun provideNewsRepository(newsApi: NewsApi, yandexCloudApi: YandexCloudApi, db: MainDatabase, scheduleParser: XlsxParser<ScheduleByBuilding>): MainRepository {
+        return MainRepositoryImpl(newsApi, yandexCloudApi, newsDao = db.daoNews, scheduleDao = db.daoSchedule, scheduleParser)
     }
 
     @Provides
@@ -100,4 +100,9 @@ object AppModule {
         return LoadScheduleUsecase(repository)
     }
 
+    @Provides
+    @Singleton
+    fun provideGetMenuUsecase(repository: MainRepository): GetMenusUsecase{
+        return GetMenusUsecase(repository)
+    }
 }

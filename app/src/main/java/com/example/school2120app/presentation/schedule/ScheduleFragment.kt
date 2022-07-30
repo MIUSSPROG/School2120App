@@ -57,7 +57,6 @@ class ScheduleFragment: Fragment(R.layout.fragment_schedule) {
                 val action = ScheduleFragmentDirections.actionScheduleFragmentToChooseOptionsFragment()
                 findNavController().navigate(action)
             }
-
             // LocalDate.now().dayOfWeek.name
             val calendar = Calendar.getInstance()
             initCardviewWeekday(calendar.get(Calendar.DAY_OF_WEEK))
@@ -132,7 +131,6 @@ class ScheduleFragment: Fragment(R.layout.fragment_schedule) {
                 }
             }
         }
-
     }
 
     private fun initCardviewWeekday(curWeekday: Int){

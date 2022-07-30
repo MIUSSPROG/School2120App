@@ -1,21 +1,20 @@
-package com.example.school2120app.data.remote.schedule
+package com.example.school2120app.data.remote
 
-import com.example.school2120app.data.remote.schedule.dto.ScheduleDto
-import com.example.school2120app.data.remote.schedule.dto.ScheduleItemDto
+import com.example.school2120app.data.remote.yandexCloudDto.FilesDto
 import okhttp3.ResponseBody
 import retrofit2.http.Header
 import retrofit2.http.GET
 import retrofit2.http.Streaming
 import retrofit2.http.Url
 
-interface ScheduleApi {
+interface YandexCloudApi {
 
     @GET("/v1/disk/resources/files")
-    suspend fun getAllFiles(@Header("Authorization") token: String): ScheduleDto
+    suspend fun getAllFiles(@Header("Authorization") token: String): FilesDto
 
     @Streaming
     @GET
-    suspend fun downloadScheduleFile(@Url fileUrl: String): ResponseBody
+    suspend fun downloadFile(@Url fileUrl: String): ResponseBody
 
     companion object{
         const val BASE_URL = "https://cloud-api.yandex.net"
