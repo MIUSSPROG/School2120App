@@ -6,7 +6,7 @@ import com.example.school2120app.domain.repository.MainRepository
 import kotlinx.coroutines.flow.Flow
 
 class GetMenusUsecase(private val repository: MainRepository) {
-    operator fun invoke(): Flow<Resource<List<MenuItem>>> {
-        return repository.getMenus()
+    operator fun invoke(fetchFromRemote: Boolean): Flow<Resource<List<MenuItem>>> {
+        return repository.getMenus(fetchFromRemote)
     }
 }

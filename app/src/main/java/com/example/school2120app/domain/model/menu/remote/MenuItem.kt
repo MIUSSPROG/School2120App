@@ -2,7 +2,6 @@ package com.example.school2120app.domain.model.menu.remote
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.time.LocalDate
 import java.util.*
 
 @Parcelize

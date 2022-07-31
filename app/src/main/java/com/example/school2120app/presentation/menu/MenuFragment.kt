@@ -39,8 +39,13 @@ class MenuFragment : Fragment(R.layout.fragment_menu) {
         binding = FragmentMenuBinding.bind(view)
         binding.apply {
 
+            swipeRefreshLayoutMenu.setOnRefreshListener {
+                viewModel.getMenus(fetchFromRemote = true)
+                swipeRefreshLayoutMenu.isRefreshing = false
+            }
+
             rvMenuItems.adapter = adapter
-            viewModel.getMenus()
+            viewModel.getMenus(fetchFromRemote = false)
             viewModel.menusLiveData.observe(viewLifecycleOwner) {
                 when (it) {
                     is Success -> {

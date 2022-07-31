@@ -6,12 +6,10 @@ import android.util.Log
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.Resource.*
+import com.example.school2120app.data.local.menu.MenuDao
 import com.example.school2120app.data.local.news.NewsDao
 import com.example.school2120app.data.local.schedule.*
-import com.example.school2120app.data.mapper.toMenuItem
-import com.example.school2120app.data.mapper.toScheduleItem
-import com.example.school2120app.data.mapper.toNews
-import com.example.school2120app.data.mapper.toNewsEntity
+import com.example.school2120app.data.mapper.*
 import com.example.school2120app.data.remote.news.NewsApi
 import com.example.school2120app.data.remote.YandexCloudApi
 import com.example.school2120app.data.remote.YandexCloudApi.Companion.ACCESS_TOKEN
@@ -32,6 +30,7 @@ class MainRepositoryImpl(
     private val yandexCloudApi: YandexCloudApi,
     private val newsDao: NewsDao,
     private val scheduleDao: ScheduleDao,
+    private val menuDao: MenuDao,
     private val scheduleParser: XlsxParser<ScheduleByBuilding>
 ) : MainRepository {
 
@@ -46,11 +45,7 @@ class MainRepositoryImpl(
         val isDbEmpty = localNewsList.isEmpty()
         val loadFromCache = !isDbEmpty && !fetchFromRemote
         if (loadFromCache) {
-            emit(
-                Success(
-                    data = localNewsList.map { it.toNews() }
-                )
-            )
+            emit(Success(data = localNewsList.map { it.toNews() }))
             return@flow
         }
 
@@ -86,6 +81,33 @@ class MainRepositoryImpl(
         }
     }
 
+    override fun getMenus(fetchFromRemote: Boolean): Flow<Resource<List<MenuItem>>> = flow {
+        emit(Loading())
+        try {
+            val localMenuList = menuDao.getMenuList()
+            val isDbEmpty = localMenuList.isEmpty()
+            val loadFromCache = !isDbEmpty && !fetchFromRemote
+            if (loadFromCache){
+                emit(Success(data = localMenuList.map { it.toMenuItem() }))
+                return@flow
+            }
+
+            val remoteMenus = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
+                .filter { it.path.split("/")[1] == "Меню" }
+                .map { it.toMenuItem() }
+
+            menuDao.clearMenuList()
+            menuDao.insertMenuList(remoteMenus.map { it.toToMenuItemEntity() })
+            emit(Success(data = menuDao.getMenuList().map { it.toMenuItem() }.sortedByDescending { it.date }))
+        }catch (e: HttpException) {
+            emit(Error("Ошибка сервера"))
+            Log.d("Error", e.message())
+        } catch (e: IOException) {
+            emit(Error("Отсутствует интернет соединение"))
+            Log.d("Error", e.message!!)
+        }
+    }
+
     override fun getSchedule(grade: String, letter: String, building: String, weekday: String, fetchFromRemote: Boolean): Flow<Resource<List<GradeLesson>>> = flow {
         emit(Loading())
         try {
@@ -106,22 +128,6 @@ class MainRepositoryImpl(
             emit(Error("Неизвестная ошибка"))
             Log.d("Error", e.message!!)
             Log.d("Error", e.stackTraceToString())
-        }
-    }
-
-    override fun getMenus(): Flow<Resource<List<MenuItem>>> = flow {
-        emit(Loading())
-        try {
-            val remoteMenus = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
-                .filter { it.path.split("/")[1] == "Меню" }
-                .map { it.toMenuItem() }
-            emit(Success(data = remoteMenus.sortedByDescending { it.date }))
-        }catch (e: HttpException) {
-            emit(Error("Ошибка сервера"))
-            Log.d("Error", e.message())
-        } catch (e: IOException) {
-            emit(Error("Отсутствует интернет соединение"))
-            Log.d("Error", e.message!!)
         }
     }
 
@@ -167,13 +173,13 @@ class MainRepositoryImpl(
             }
             emit(Success(data = null))
         }catch (e: HttpException) {
-            emit(Error("Ошибка сервера ${e.message()}"))
+            emit(Error("Ошибка сервера"))
             Log.d("Error", e.message())
         } catch (e: IOException) {
-            emit(Error("Ошибка чтения ${e.message}"))
+            emit(Error("Отсутствует интернет соединение"))
             Log.d("Error", e.message!!)
         }catch (e: Exception){
-            emit(Error("Неизвестная ошибка ${e.message}"))
+            emit(Error("Неизвестная ошибка"))
             Log.d("Error", e.message!!)
             Log.d("Error", e.stackTraceToString())
         }
@@ -184,9 +190,11 @@ class MainRepositoryImpl(
         try {
             emit(Success(data = scheduleDao.getBuildings()))
         }catch (e: SQLException){
-            emit(Error("Ошибка базы данных ${e.message}"))
+            Log.d("Error", e.message.toString())
+            emit(Error("Ошибка базы данных"))
         }catch (e: Exception){
-            emit(Error("Неизветсная ошибка ${e.message}"))
+            Log.d("Error", e.message.toString())
+            emit(Error("Неизветсная ошибка"))
         }
     }
 
@@ -195,9 +203,11 @@ class MainRepositoryImpl(
         try {
             emit(Success(data = scheduleDao.getGrades(building)))
         }catch (e: SQLException){
-            emit(Error("Ошибка базы данных ${e.message}"))
+            emit(Error("Ошибка базы данных"))
+            Log.d("Error", e.message.toString())
         }catch (e: Exception){
-            emit(Error("Неизветсная ошибка ${e.message}"))
+            emit(Error("Неизветсная ошибка"))
+            Log.d("Error", e.message.toString())
         }
     }
 

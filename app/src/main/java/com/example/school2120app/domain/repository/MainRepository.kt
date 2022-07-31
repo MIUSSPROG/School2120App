@@ -13,6 +13,6 @@ interface MainRepository {
     fun loadSchedule(): Flow<Resource<Unit>>
     fun getBuildings(): Flow<Resource<List<String>>>
     fun getGrades(building: String): Flow<Resource<List<String>>>
-    fun getMenus(): Flow<Resource<List<MenuItem>>>
+    fun getMenus(fetchFromRemote: Boolean): Flow<Resource<List<MenuItem>>>
     fun getPreview(previewUrl: String): Flow<Resource<ImageSource>>
 }

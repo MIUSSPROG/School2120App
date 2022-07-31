@@ -1,5 +1,6 @@
 package com.example.school2120app.data.mapper
 
+import com.example.school2120app.data.local.menu.MenuItemEntity
 import com.example.school2120app.data.local.news.NewsEntity
 import com.example.school2120app.data.remote.news.dto.NewsDto
 import com.example.school2120app.data.remote.yandexCloudDto.FileItemDto
@@ -7,6 +8,7 @@ import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.domain.model.schedule.remote.ScheduleItem
 import java.text.SimpleDateFormat
+import java.util.*
 
 fun NewsEntity.toNews(): News{
     return News(
@@ -15,6 +17,24 @@ fun NewsEntity.toNews(): News{
         name = name ?: "",
         anons = anons ?: "",
         content = content ?: ""
+    )
+}
+
+fun MenuItemEntity.toMenuItem(): MenuItem{
+    return MenuItem(
+        name = name,
+        date = date.time,
+        previewUrl = previewUrl,
+        downloadUrl = downloadUrl
+    )
+}
+
+fun MenuItem.toToMenuItemEntity(): MenuItemEntity{
+    return MenuItemEntity(
+        name = name,
+        date = Calendar.getInstance().apply { time = date },
+        previewUrl = previewUrl,
+        downloadUrl = downloadUrl
     )
 }
 

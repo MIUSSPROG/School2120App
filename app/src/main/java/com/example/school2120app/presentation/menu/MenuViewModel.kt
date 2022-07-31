@@ -26,9 +26,9 @@ class MenuViewModel @Inject constructor(private val getMenusUsecase: GetMenusUse
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun getMenus(){
+    fun getMenus(fetchFromRemote: Boolean){
         viewModelScope.launch {
-            getMenusUsecase().onEach { result ->
+            getMenusUsecase(fetchFromRemote).onEach { result ->
                 when(result){
                     is Loading -> {
                         _menusLiveData.postValue(Loading())
