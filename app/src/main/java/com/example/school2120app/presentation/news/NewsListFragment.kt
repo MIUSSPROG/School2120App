@@ -63,7 +63,8 @@ class NewsListFragment: Fragment(R.layout.fragment_news_list) {
                 viewModel.eventFlow.collectLatest { event ->
                     when(event){
                         is UIEvent.ShowSnackbar -> {
-                            Snackbar.make(this@apply.root, event.message, Snackbar.LENGTH_SHORT).show()
+                            progressBarNews.visibility = View.INVISIBLE
+                            Snackbar.make(binding.root, event.message, Snackbar.LENGTH_SHORT).show()
                         }
                     }
                 }

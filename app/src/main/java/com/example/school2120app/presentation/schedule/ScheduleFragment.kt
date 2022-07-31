@@ -78,6 +78,7 @@ class ScheduleFragment: Fragment(R.layout.fragment_schedule) {
                 when(result){
                     is Loading -> {
                         btnChooseScheduleOption.isEnabled = false
+                        progressBarLoadingSchedule.visibility = VISIBLE
                     }
                     is Success -> {
                         btnChooseScheduleOption.isEnabled = true
@@ -113,7 +114,11 @@ class ScheduleFragment: Fragment(R.layout.fragment_schedule) {
                     is Success -> {
                         scheduleAdapter.submitList(it.data)
                         progressBarLoadingSchedule.visibility = INVISIBLE
-                        imgvImagePreview.visibility = INVISIBLE
+                        if (it.data!!.isEmpty()){
+                            imgvImagePreview.visibility = VISIBLE
+                        }else {
+                            imgvImagePreview.visibility = INVISIBLE
+                        }
                     }
                     is Error -> {
                         progressBarLoadingSchedule.visibility = INVISIBLE
@@ -125,7 +130,7 @@ class ScheduleFragment: Fragment(R.layout.fragment_schedule) {
                 viewModel.eventFlow.collectLatest { event ->
                     when(event){
                         is UIEvent.ShowSnackbar -> {
-                            Snackbar.make(this@apply.root, event.message, Snackbar.LENGTH_SHORT).show()
+                            Snackbar.make(binding.root, event.message, Snackbar.LENGTH_SHORT).show()
                         }
                     }
                 }

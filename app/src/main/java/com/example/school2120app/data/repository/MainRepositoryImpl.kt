@@ -1,7 +1,9 @@
 package com.example.school2120app.data.repository
 
 import android.database.sqlite.SQLiteException
+import android.graphics.BitmapFactory
 import android.util.Log
+import com.davemorrissey.labs.subscaleview.ImageSource
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.Resource.*
 import com.example.school2120app.data.local.news.NewsDao
@@ -12,7 +14,7 @@ import com.example.school2120app.data.mapper.toNews
 import com.example.school2120app.data.mapper.toNewsEntity
 import com.example.school2120app.data.remote.news.NewsApi
 import com.example.school2120app.data.remote.YandexCloudApi
-import com.example.school2120app.data.remote.YandexCloudApi.Companion.SCHEDULE_ACCESS_TOKEN
+import com.example.school2120app.data.remote.YandexCloudApi.Companion.ACCESS_TOKEN
 import com.example.school2120app.data.xlsx.XlsxParser
 import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
@@ -24,7 +26,6 @@ import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
 import java.sql.SQLException
-import kotlin.system.measureTimeMillis
 
 class MainRepositoryImpl(
     private val newsApi: NewsApi,
@@ -61,10 +62,12 @@ class MainRepositoryImpl(
                 .map { it.toNews() }
 
         } catch (e: HttpException) {
-            emit(Error("Ошибка сервера ${e.message()}"))
+            emit(Error("Ошибка сервера"))
+            Log.d("Error", e.message.toString())
             null
         } catch (e: IOException) {
-            emit(Error("Ошибка чтения ${e.message}"))
+            emit(Error("Отсутствует интернет соединение"))
+            Log.d("Error", e.message.toString())
             null
         }
 
@@ -97,10 +100,10 @@ class MainRepositoryImpl(
             emit(Success(data = scheduleDao.getSchedule(building = "ш4", grade = grade, letter = letter, weekday = weekday)))
 
         } catch (e: SQLiteException) {
-            emit(Error("Ошибка базы данных ${e.message}"))
+            emit(Error("Ошибка базы данных"))
             Log.d("Error", e.message!!)
         } catch (e: Exception){
-            emit(Error("Неизвестная ошибка ${e.message}"))
+            emit(Error("Неизвестная ошибка"))
             Log.d("Error", e.message!!)
             Log.d("Error", e.stackTraceToString())
         }
@@ -109,21 +112,40 @@ class MainRepositoryImpl(
     override fun getMenus(): Flow<Resource<List<MenuItem>>> = flow {
         emit(Loading())
         try {
-            val remoteMenus = yandexCloudApi.getAllFiles(SCHEDULE_ACCESS_TOKEN).fileItems
+            val remoteMenus = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
                 .filter { it.path.split("/")[1] == "Меню" }
                 .map { it.toMenuItem() }
             emit(Success(data = remoteMenus.sortedByDescending { it.date }))
         }catch (e: HttpException) {
-            emit(Error("Ошибка сервера ${e.message()}"))
+            emit(Error("Ошибка сервера"))
+            Log.d("Error", e.message())
         } catch (e: IOException) {
-            emit(Error("Отсутствует интернет соединение \n${e.message}"))
+            emit(Error("Отсутствует интернет соединение"))
+            Log.d("Error", e.message!!)
+        }
+    }
+
+    override fun getPreview(previewUrl: String): Flow<Resource<ImageSource>> = flow {
+        emit(Loading())
+        try {
+            val url = previewUrl.replace("size=S", "size=XXXL")
+            val response = yandexCloudApi.getPreview(token = "OAuth $ACCESS_TOKEN", previewUrl = url)
+            val bmp = BitmapFactory.decodeStream(response.byteStream())
+            val imageSource = ImageSource.bitmap(bmp)
+            emit(Success(data = imageSource))
+        }catch (e: HttpException) {
+            emit(Error("Ошибка сервера"))
+            Log.d("Error", e.message())
+        } catch (e: IOException) {
+            emit(Error("Отсутсвует интернет соединение"))
+            Log.d("Error", e.message!!)
         }
     }
 
     override fun loadSchedule(): Flow<Resource<Unit>> = flow {
         emit(Loading())
         try {
-            val remoteScheduleInfo = yandexCloudApi.getAllFiles(SCHEDULE_ACCESS_TOKEN).fileItems
+            val remoteScheduleInfo = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
                 .filter { it.path.split("/")[1] == "ТестРасписание" } // building вместо ТестРасписание
                 .map {
                     it.toScheduleItem()

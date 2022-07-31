@@ -63,7 +63,7 @@ class ScheduleViewModel @Inject constructor(
                         _scheduleLoad.postValue(Loading())
                     }
                     is Error -> {
-                        _eventFlow.emit(UIEvent.ShowSnackbar("Ошибка подгрузки данных ${result.message}"))
+                        _eventFlow.emit(UIEvent.ShowSnackbar("Ошибка подгрузки данных"))
                     }
                 }
             }.launchIn(this)

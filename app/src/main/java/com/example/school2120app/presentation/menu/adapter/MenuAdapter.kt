@@ -5,10 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.school2120app.core.util.ActionListener
 import com.example.school2120app.databinding.MenuRvItemBinding
 import com.example.school2120app.domain.model.menu.remote.MenuItem
 
-class MenuAdapter: ListAdapter<MenuItem, MenuAdapter.MenuViewHolder>(DiffCallback()) {
+class MenuAdapter(
+    private val actionListener: ActionListener<MenuItem>
+): ListAdapter<MenuItem, MenuAdapter.MenuViewHolder>(DiffCallback()) {
 
     class MenuViewHolder(private val binding: MenuRvItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(menu: MenuItem){
@@ -36,6 +39,9 @@ class MenuAdapter: ListAdapter<MenuItem, MenuAdapter.MenuViewHolder>(DiffCallbac
 
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
         val curItem = getItem(position)
+        holder.itemView.setOnClickListener {
+            actionListener.onItemClicked(curItem)
+        }
         holder.bind(curItem)
     }
 }

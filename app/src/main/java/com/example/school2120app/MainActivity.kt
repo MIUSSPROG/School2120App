@@ -12,13 +12,21 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private var navController: NavController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val navHost = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        val navController = navHost.navController
-        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
+        navController = navHost.navController
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController!!)
     }
+
+    override fun onSupportNavigateUp(): Boolean = (navController?.navigateUp() ?: false) ||  super.onSupportNavigateUp()
+
+    override fun onBackPressed() {
+        navController?.popBackStack()
+    }
+
 }

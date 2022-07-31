@@ -105,4 +105,10 @@ object AppModule {
     fun provideGetMenuUsecase(repository: MainRepository): GetMenusUsecase{
         return GetMenusUsecase(repository)
     }
+
+    @Provides
+    @Singleton
+    fun provideGetPreviewUsecase(repository: MainRepository): GetPreviewUsecase{
+        return GetPreviewUsecase(repository)
+    }
 }

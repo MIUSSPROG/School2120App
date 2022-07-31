@@ -9,5 +9,18 @@
         android:id="@+id/menuFragment"
         android:name="com.example.school2120app.presentation.menu.MenuFragment"
         android:label="fragment_menu"
-        tools:layout="@layout/fragment_menu" />
+        tools:layout="@layout/fragment_menu" >
+        <action
+            android:id="@+id/action_menuFragment_to_menuDetailFragment"
+            app:destination="@id/menuDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/menuDetailFragment"
+        android:name="com.example.school2120app.presentation.menu.MenuDetailFragment"
+        android:label="fragment_menu_detail"
+        tools:layout="@layout/fragment_menu_detail" >
+        <argument
+            android:name="menuPdfItem"
+            app:argType="com.example.school2120app.domain.model.menu.remote.MenuItem" />
+    </fragment>
 </navigation>

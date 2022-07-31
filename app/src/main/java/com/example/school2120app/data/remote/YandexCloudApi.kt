@@ -16,8 +16,11 @@ interface YandexCloudApi {
     @GET
     suspend fun downloadFile(@Url fileUrl: String): ResponseBody
 
+    @GET
+    suspend fun getPreview(@Header("Authorization") token: String, @Url previewUrl: String): ResponseBody
+
     companion object{
         const val BASE_URL = "https://cloud-api.yandex.net"
-        const val SCHEDULE_ACCESS_TOKEN = "AQAEA7qjvMhBAAcXnvnpRWI93E6ur3fUbjXHKtQ"
+        const val ACCESS_TOKEN = "AQAEA7qjvMhBAAcXnv8LaFDp2UMJhg5PkkVo7Ko"
     }
 }
