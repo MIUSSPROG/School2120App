@@ -2,6 +2,7 @@ package com.example.school2120app.domain.repository
 
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.example.school2120app.core.util.Resource
+import com.example.school2120app.domain.model.contacts.ContactInfo
 import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.domain.model.schedule.local.GradeLesson
@@ -15,4 +16,5 @@ interface MainRepository {
     fun getGrades(building: String): Flow<Resource<List<String>>>
     fun getMenus(fetchFromRemote: Boolean): Flow<Resource<List<MenuItem>>>
     fun getPreview(previewUrl: String): Flow<Resource<ImageSource>>
+    fun getContacts(): Flow<Resource<List<ContactInfo>>>
 }

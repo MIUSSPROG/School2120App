@@ -14,6 +14,8 @@ import com.example.school2120app.data.remote.news.NewsApi
 import com.example.school2120app.data.remote.YandexCloudApi
 import com.example.school2120app.data.remote.YandexCloudApi.Companion.ACCESS_TOKEN
 import com.example.school2120app.data.xlsx.XlsxParser
+import com.example.school2120app.domain.model.contacts.ContactInfo
+import com.example.school2120app.domain.model.contacts.ContactsList
 import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.domain.model.schedule.local.GradeLesson
@@ -31,7 +33,8 @@ class MainRepositoryImpl(
     private val newsDao: NewsDao,
     private val scheduleDao: ScheduleDao,
     private val menuDao: MenuDao,
-    private val scheduleParser: XlsxParser<ScheduleByBuilding>
+    private val scheduleParser: XlsxParser<ScheduleByBuilding>,
+    private val contactsParser: XlsxParser<ContactsList>
 ) : MainRepository {
 
 
@@ -147,16 +150,32 @@ class MainRepositoryImpl(
             Log.d("Error", e.message!!)
         }
     }
+    override fun getContacts(): Flow<Resource<List<ContactInfo>>> = flow {
+        emit(Loading())
+        try {
+            val remoteContactsInfo = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
+                .filter { it.path.split("/")[1] == "Контакты" } // building вместо ТестРасписание
+                .map { it.toContactInfo() }.first()
+
+            val contactsFileByteStream = yandexCloudApi.downloadFile(remoteContactsInfo.fileUrl).byteStream()
+            val remoteContactsParsed =  contactsParser.parse(contactsFileByteStream)
+            emit(Success(data = remoteContactsParsed.contacts))
+
+        }catch (e: HttpException) {
+            emit(Error("Ошибка сервера"))
+            Log.d("Error", e.message())
+        } catch (e: IOException) {
+            emit(Error("Отсутсвует интернет соединение"))
+            Log.d("Error", e.message!!)
+        }
+    }
 
     override fun loadSchedule(): Flow<Resource<Unit>> = flow {
         emit(Loading())
         try {
             val remoteScheduleInfo = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
-                .filter { it.path.split("/")[1] == "ТестРасписание" } // building вместо ТестРасписание
-                .map {
-                    it.toScheduleItem()
-                }
-                .first()
+                .filter { it.path.split("/")[1] == "ТестРасписание" }
+                .map { it.toScheduleItem() }.first()
 
             val scheduleFileByteStream = yandexCloudApi.downloadFile(remoteScheduleInfo.fileUrl).byteStream()
             val remoteScheduleParsed =  scheduleParser.parse(scheduleFileByteStream)

@@ -3,4 +3,54 @@
     <string name="mylorem">orem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur hendrerit orci ac nisi convallis, non pellentesque orci ullamcorper. Donec ac eros lacinia, scelerisque nibh eu, lobortis sem. Nunc dapibus sapien ut eros mollis fermentum. Integer augue quam, consequat quis lorem nec, vestibulum mollis leo.</string>
     <string name="mylorem_big">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam consectetur non orci id dictum. Nulla sollicitudin egestas ligula, in finibus libero mattis eleifend. Nam turpis ex, mollis a mi vulputate, blandit elementum nisl. Integer sit amet congue tellus. Sed consectetur gravida porttitor. Pellentesque egestas tempor odio, vitae porta nunc rutrum et. Etiam pretium ornare ante non maximus. Vestibulum blandit mattis viverra. Vestibulum pellentesque sem lacus, facilisis posuere dolor blandit interdum. Nunc non pretium velit, eget viverra orci. Etiam eget maximus ante. Phasellus accumsan semper elit vitae maximus. Donec faucibus posuere sapien, vitae tincidunt diam fringilla id. Ut egestas eros nibh. Fusce pellentesque arcu ornare quam tincidunt molestie. Nam laoreet vel ligula sit amet fringilla.Quisque volutpat consectetur arcu, et tristique ex finibus ac. Nullam eros magna, lacinia sed lorem vel, sollicitudin elementum purus. Praesent non risus quis libero congue hendrerit. In dapibus ultrices justo, lobortis vehicula lectus porttitor ut. Nullam sit amet ligula nec enim sagittis rhoncus in sed orci. Cras eget eros ante. Nulla sed lectus eget purus dictum ullamcorper. Sed bibendum erat commodo, dictum magna id, vulputate nisi.</string>
     <string name="contentRoot">src/main/java/com/example/school2120app/files</string>
+
+    <string name="building1">Ул. Атласова, д.7 корп.3</string>
+    <string name="building1_lat">55.600776</string>
+    <string name="building1_lon">37.360295</string>
+
+    <string name="building2">Ул. Радужная, д. 5</string>
+    <string name="building2_lat">55.592830</string>
+    <string name="building2_lon">37.372207</string>
+
+    <string name="building3">Ул. Бианки, д. 9А</string>
+    <string name="building3_lat">55.603873</string>
+    <string name="building3_lon">37.365990</string>
+
+    <string name="building4">Ул. Лаптева, д. 6, корп. 4</string>
+    <string name="building4_lat">55.600409</string>
+    <string name="building4_lon">37.362918</string>
+
+    <string name="building5">Ул. Георгиевская, д.2</string>
+    <string name="building5_lat">55.590765</string>
+    <string name="building5_lon">37.375333</string>
+
+    <string name="building6">Ул. Радужная, д.12</string>
+    <string name="building6_lat">55.590328</string>
+    <string name="building6_lon">37.371398</string>
+
+    <string name="building7">Радужный проезд, д. 2</string>
+    <string name="building7_lat">55.593497</string>
+    <string name="building7_lon">37.365846</string>
+
+    <string name="building8">Ул. Никитина, д. 6, корп. 1</string>
+    <string name="building8_lat">55.604987</string>
+    <string name="building8_lon">37.360510</string>
+
+    <string name="building9">Ул. Атласова, д.7, корп. 2</string>
+    <string name="building9_lat">55.601045</string>
+    <string name="building9_lon">37.358013</string>
+
+    <string name="building10">Ул. Бианки, д. 13А</string>
+    <string name="building10_lat">55.603842</string>
+    <string name="building10_lon">37.368928</string>
+
+    <string name="building11">Ул. Лаптева, д. 6, корп. 2</string>
+    <string name="building11_lat">55.599926</string>
+    <string name="building11_lon">37.364939</string>
+
+    <string name="building12">Ул. Лаптева, д. 6, корп. 3</string>
+    <string name="building12_lat">55.600079</string>
+    <string name="building12_lon">37.363924</string>
+
+
 </resources>

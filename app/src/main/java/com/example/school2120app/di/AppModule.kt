@@ -7,6 +7,8 @@ import com.example.school2120app.data.remote.news.NewsApi
 import com.example.school2120app.data.remote.YandexCloudApi
 import com.example.school2120app.data.repository.MainRepositoryImpl
 import com.example.school2120app.data.xlsx.XlsxParser
+import com.example.school2120app.domain.model.contacts.ContactInfo
+import com.example.school2120app.domain.model.contacts.ContactsList
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.repository.MainRepository
 import com.example.school2120app.domain.usecase.*
@@ -66,8 +68,10 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNewsRepository(newsApi: NewsApi, yandexCloudApi: YandexCloudApi, db: MainDatabase, scheduleParser: XlsxParser<ScheduleByBuilding>): MainRepository {
-        return MainRepositoryImpl(newsApi, yandexCloudApi, newsDao = db.daoNews, scheduleDao = db.daoSchedule, menuDao = db.daoMenu, scheduleParser)
+    fun provideNewsRepository(newsApi: NewsApi, yandexCloudApi: YandexCloudApi, db: MainDatabase,
+                              scheduleParser: XlsxParser<ScheduleByBuilding>, contactsParser: XlsxParser<ContactsList>): MainRepository {
+        return MainRepositoryImpl(newsApi, yandexCloudApi, newsDao = db.daoNews,
+            scheduleDao = db.daoSchedule, menuDao = db.daoMenu, scheduleParser =  scheduleParser, contactsParser = contactsParser)
     }
 
     @Provides
@@ -110,5 +114,11 @@ object AppModule {
     @Singleton
     fun provideGetPreviewUsecase(repository: MainRepository): GetPreviewUsecase{
         return GetPreviewUsecase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetContactsUsecase(repository: MainRepository): GetContactsUsecase{
+        return GetContactsUsecase(repository)
     }
 }

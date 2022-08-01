@@ -1,7 +1,10 @@
 package com.example.school2120app.di
 
+import com.example.school2120app.data.xlsx.ContactsParser
 import com.example.school2120app.data.xlsx.ScheduleParser
 import com.example.school2120app.data.xlsx.XlsxParser
+import com.example.school2120app.domain.model.contacts.ContactInfo
+import com.example.school2120app.domain.model.contacts.ContactsList
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import dagger.Binds
 import dagger.Module
@@ -18,5 +21,11 @@ abstract class RepositoryModule {
     abstract fun bindScheduleParser(
         scheduleParser: ScheduleParser
     ): XlsxParser<ScheduleByBuilding>
+
+    @Binds
+    @Singleton
+    abstract fun bindContactsParser(
+        contactsParser: ContactsParser
+    ): XlsxParser<ContactsList>
 
 }

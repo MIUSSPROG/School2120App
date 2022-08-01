@@ -4,6 +4,8 @@ import com.example.school2120app.data.local.menu.MenuItemEntity
 import com.example.school2120app.data.local.news.NewsEntity
 import com.example.school2120app.data.remote.news.dto.NewsDto
 import com.example.school2120app.data.remote.yandexCloudDto.FileItemDto
+import com.example.school2120app.domain.model.contacts.ContactInfo
+import com.example.school2120app.domain.model.contacts.ContactItem
 import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.domain.model.schedule.remote.ScheduleItem
@@ -65,8 +67,14 @@ fun FileItemDto.toScheduleItem(): ScheduleItem {
     )
 }
 
-fun FileItemDto.toMenuItem(): MenuItem{
+fun FileItemDto.toContactInfo(): ContactItem{
+    return ContactItem(
+        name = name,
+        fileUrl = file
+    )
+}
 
+fun FileItemDto.toMenuItem(): MenuItem{
     val sdf = SimpleDateFormat("dd-MM-yyyy")
     val menuDate = sdf.parse(name.split(' ').last().replace('.','-'))
     return MenuItem(

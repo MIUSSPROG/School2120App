@@ -1,10 +1,9 @@
 package com.example.school2120app.data.xlsx
 
-import android.util.Log
+import com.example.school2120app.core.util.FileCaching
 import com.example.school2120app.domain.model.schedule.local.LessonInfo
 import com.example.school2120app.domain.model.schedule.local.Schedule
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
-import com.example.school2120app.domain.model.schedule.local.Weekday
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -54,24 +53,7 @@ class ScheduleParser @Inject constructor() : XlsxParser<ScheduleByBuilding> {
             var curClassCount = 0
 
             // проверка наличия файла schedule в папке cache
-            var isExisted = false
-            var schedulePath = ""
-            File(cachePath).walk().forEach {
-                val splitPath = it.toString().split('/')
-                if (splitPath[splitPath.size - 1].startsWith("schedule")) {
-                    isExisted = true
-                    schedulePath = it.toString()
-                    println(schedulePath)
-                    return@forEach
-                }
-            }
-            if (!isExisted) {
-                val path = Paths.get(cachePath)
-                val filePath = Files.createTempFile(path, "schedule_", ".xlsx")
-                Files.write(filePath, stream.readBytes()).toString()
-                schedulePath = filePath.toString()
-            }
-
+            val schedulePath = FileCaching.save(stream = stream, filePrefix = "schedule_")
             val fis = FileInputStream(schedulePath)
             val myWorkBook = XSSFWorkbook(fis)
             val numOfSheets = myWorkBook.numberOfSheets
