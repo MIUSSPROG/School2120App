@@ -5,10 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.school2120app.core.util.ActionListener
 import com.example.school2120app.databinding.ContactRvItemBinding
 import com.example.school2120app.domain.model.contacts.ContactInfo
 
-class ContactsAdapter: ListAdapter<ContactInfo, ContactsAdapter.ContactsViewHolder>(DiffCallback()) {
+class ContactsAdapter(
+    private val actionListener: ActionListener<ContactInfo>
+): ListAdapter<ContactInfo, ContactsAdapter.ContactsViewHolder>(DiffCallback()) {
 
     class ContactsViewHolder(private val binding: ContactRvItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(item: ContactInfo){
@@ -37,6 +40,9 @@ class ContactsAdapter: ListAdapter<ContactInfo, ContactsAdapter.ContactsViewHold
 
     override fun onBindViewHolder(holder: ContactsViewHolder, position: Int) {
         val curItem = getItem(position)
+        holder.itemView.setOnClickListener {
+            actionListener.onItemClicked(curItem)
+        }
         holder.bind(curItem)
     }
 }

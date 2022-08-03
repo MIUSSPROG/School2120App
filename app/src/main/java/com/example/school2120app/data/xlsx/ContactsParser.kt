@@ -50,10 +50,14 @@ class ContactsParser @Inject constructor(): XlsxParser<ContactsList> {
                 contactsList.add(
                     ContactInfo(
                         position = contactRow[0],
-                        address = contactRow[1],
-                        name = contactRow[2],
-                        phone = contactRow[3],
-                        email = contactRow[4]
+                        name = contactRow[1],
+                        address = contactRow[2],
+                        lat = contactRow[3].split(", ")[0].toDouble(),
+                        lon = contactRow[3].split(", ")[1].toDouble(),
+                        buildingType = contactRow[4],
+                        phone = contactRow[5],
+                        email = contactRow[6],
+                        photoUrl = contactRow[7]
                     )
                 )
                 content.setLength(0)

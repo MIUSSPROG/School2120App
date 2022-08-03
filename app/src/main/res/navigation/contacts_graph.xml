@@ -9,5 +9,18 @@
         android:id="@+id/contactsFragment"
         android:name="com.example.school2120app.presentation.contacts.ContactsFragment"
         android:label="fragment_contacts"
-        tools:layout="@layout/fragment_contacts" />
+        tools:layout="@layout/fragment_contacts" >
+        <action
+            android:id="@+id/action_contactsFragment_to_contactsDetailFragment"
+            app:destination="@id/contactsDetailFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/contactsDetailFragment"
+        android:name="com.example.school2120app.presentation.contacts.ContactsDetailFragment"
+        android:label="fragment_contact_detail"
+        tools:layout="@layout/fragment_contact_detail" >
+        <argument
+            android:name="contactItemInfo"
+            app:argType="com.example.school2120app.domain.model.contacts.ContactInfo" />
+    </dialog>
 </navigation>

@@ -10,13 +10,16 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.school2120app.R
+import com.example.school2120app.core.util.ActionListener
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.Resource.*
 import com.example.school2120app.core.util.UIEvent
 import com.example.school2120app.databinding.FragmentContactsBinding
-import com.example.school2120app.domain.model.contacts.BuildingType.*
-import com.example.school2120app.domain.model.contacts.ContactMapCoordinate
+import com.example.school2120app.domain.model.contacts.ContactInfo
+import com.example.school2120app.presentation.contacts.ContactsDetailFragment.Companion.EXTRA_CONTACT_SELECTED
+import com.example.school2120app.presentation.contacts.ContactsDetailFragment.Companion.REQUEST_CODE
 import com.example.school2120app.presentation.contacts.adapter.ContactsAdapter
 import com.google.android.material.snackbar.Snackbar
 import com.yandex.mapkit.Animation
@@ -32,14 +35,19 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
 
     private lateinit var binding: FragmentContactsBinding
     private val viewModel: ContactsViewModel by viewModels()
-    private val adapter by lazy { ContactsAdapter() }
+    private val adapter by lazy { ContactsAdapter(object : ActionListener<ContactInfo> {
+        override fun onItemClicked(item: ContactInfo, view: View?) {
+            val action = ContactsFragmentDirections.actionContactsFragmentToContactsDetailFragment(item)
+            findNavController().navigate(action)
+        }
+    }) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentContactsBinding.bind(view)
         MapKitFactory.initialize(context)
-        initPlacesCoordinates()
+//        initPlacesCoordinates()
 
         binding.apply {
             rvContacts.adapter = adapter
@@ -52,6 +60,7 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
                     }
                     is Success -> {
                         pbContactsLoading.visibility = INVISIBLE
+                        it.data?.let { it1 -> initPlacesCoordinates(it1) }
                         adapter.submitList(it.data)
 //                        Log.d("result", it.data.toString())
                     }
@@ -69,6 +78,12 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
             }
         }
 
+        parentFragmentManager.setFragmentResultListener(REQUEST_CODE, viewLifecycleOwner){ _, data ->
+            val contactInfo =  data.get(EXTRA_CONTACT_SELECTED) as ContactInfo
+            binding.mapView.map.move(CameraPosition(
+                Point(contactInfo.lat, contactInfo.lon), 17.5f, 0.0f, 0.0f)
+                , Animation(Animation.Type.SMOOTH, 0f), null)
+        }
     }
 
     override fun onStop() {
@@ -83,75 +98,10 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
         MapKitFactory.getInstance().onStart()
     }
 
-    private fun initPlacesCoordinates(){
-        val coords = mutableListOf<ContactMapCoordinate>()
-        coords.addAll(
-            listOf(
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building1_lat).toDouble(),
-                    long = resources.getString(R.string.building1_lon).toDouble(),
-                    address = resources.getString(R.string.building1),
-                    type = SCHOOL),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building2_lat).toDouble(),
-                    long = resources.getString(R.string.building2_lon).toDouble(),
-                    address = resources.getString(R.string.building2),
-                    type = SCHOOL),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building3_lat).toDouble(),
-                    long = resources.getString(R.string.building3_lon).toDouble(),
-                    address = resources.getString(R.string.building3),
-                    type = SCHOOL),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building4_lat).toDouble(),
-                    long = resources.getString(R.string.building4_lon).toDouble(),
-                    address = resources.getString(R.string.building4),
-                    type = SCHOOL),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building5_lat).toDouble(),
-                    long = resources.getString(R.string.building5_lon).toDouble(),
-                    address = resources.getString(R.string.building5),
-                    type = KINDERGARTEN),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building6_lat).toDouble(),
-                    long = resources.getString(R.string.building6_lon).toDouble(),
-                    address = resources.getString(R.string.building6),
-                    type = KINDERGARTEN),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building7_lat).toDouble(),
-                    long = resources.getString(R.string.building7_lon).toDouble(),
-                    address = resources.getString(R.string.building7),
-                    type = KINDERGARTEN),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building8_lat).toDouble(),
-                    long = resources.getString(R.string.building8_lon).toDouble(),
-                    address = resources.getString(R.string.building8),
-                    type = KINDERGARTEN),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building9_lat).toDouble(),
-                    long = resources.getString(R.string.building9_lon).toDouble(),
-                    address = resources.getString(R.string.building9),
-                    type = KINDERGARTEN),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building10_lat).toDouble(),
-                    long = resources.getString(R.string.building10_lon).toDouble(),
-                    address = resources.getString(R.string.building10),
-                    type = KINDERGARTEN),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building11_lat).toDouble(),
-                    long = resources.getString(R.string.building11_lon).toDouble(),
-                    address = resources.getString(R.string.building11),
-                    type = KINDERGARTEN),
-                ContactMapCoordinate(
-                    lat = resources.getString(R.string.building12_lat).toDouble(),
-                    long = resources.getString(R.string.building12_lon).toDouble(),
-                    address = resources.getString(R.string.building12),
-                    type = KINDERGARTEN)
-            )
-        )
+    private fun initPlacesCoordinates(coords: List<ContactInfo>){
 
         binding.mapView.map.move(
-            CameraPosition(Point(coords[0].lat, coords[0].long), 13.5f, 0.0f, 0.0f) ,
+            CameraPosition(Point(coords[0].lat, coords[0].lon), 13.5f, 0.0f, 0.0f) ,
             Animation(Animation.Type.SMOOTH, 0f),
             null
         )
@@ -160,10 +110,9 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
         val markerKindergarten = ImageProvider.fromBitmap(getBitmapFromVectorDrawable(R.drawable.ic_kindergarten))
 
         for (item in coords) {
-            val marker = if (item.type == SCHOOL) markerSchool else markerKindergarten
-            binding.mapView.map.mapObjects.addPlacemark(Point(item.lat, item.long), marker)
+            val marker = if (item.buildingType == SCHOOL) markerSchool else markerKindergarten
+            binding.mapView.map.mapObjects.addPlacemark(Point(item.lat, item.lon), marker)
         }
-
     }
 
     private fun getBitmapFromVectorDrawable(drawableId: Int): Bitmap? {
@@ -180,5 +129,7 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
 
     companion object{
         const val YANDEX_MAP_API_KEY = "00853820-db0b-432b-b76d-cef71a379ae4"
+        const val SCHOOL = "Школа"
+        const val KINDERGARTEN = "Садик"
     }
 }

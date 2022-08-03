@@ -10,7 +10,8 @@
 
     <color name="gray">#C7C7C7</color>
     <color name="card_bg_color">#f6f6f6</color>
-    <color name="blue_light">#CCDBE8F6</color>
+    <color name="blue_light_semi_transparent">#CCDBE8F6</color>
+    <color name="blue_light">#DBE8F6</color>
     <color name="blue_dark">#4B38BA</color>
     <color name="blue_black">#0D1E47</color>
     <color name="cyan">#67EFFF</color>

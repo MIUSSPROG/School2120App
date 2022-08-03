@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".presentation.contacts.ContactsDetailFragment">
+
+    <ImageView
+        android:id="@+id/imgvAvatarContactDetail"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvPositionContactDetail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="Директор"
+        android:textColor="@color/blue_black"
+        android:textSize="@dimen/header_size"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgvAvatarContactDetail" />
+
+    <TextView
+        android:id="@+id/tvNameContactDetail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="Ланщиков Дмитрий Николаевич"
+        android:textColor="@color/blue_black"
+        android:textSize="@dimen/header_size"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/tvPositionContactDetail"
+        app:layout_constraintStart_toStartOf="@+id/tvPositionContactDetail"
+        app:layout_constraintTop_toBottomOf="@+id/tvPositionContactDetail" />
+
+    <ImageView
+        android:id="@+id/btnPhoneContactDetail"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="30dp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgvAvatarContactDetail"
+        app:layout_constraintEnd_toStartOf="@+id/btnMailContactDetail"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/imgvAvatarContactDetail"
+        app:layout_constraintTop_toTopOf="@+id/imgvAvatarContactDetail"
+        app:srcCompat="@drawable/ic_phone" />
+
+    <ImageView
+        android:id="@+id/btnMailContactDetail"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnPhoneContactDetail"
+        app:layout_constraintEnd_toStartOf="@+id/btnNavContactDetail"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnPhoneContactDetail"
+        app:layout_constraintTop_toTopOf="@+id/btnPhoneContactDetail"
+        app:srcCompat="@drawable/ic_email" />
+
+    <ImageView
+        android:id="@+id/btnNavContactDetail"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnMailContactDetail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnMailContactDetail"
+        app:layout_constraintTop_toTopOf="@+id/btnMailContactDetail"
+        app:srcCompat="@drawable/ic_navigation" />
+
+    <TextView
+        android:id="@+id/tvEmailContactDetail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="mail@mail.ru"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sub_header_size"
+        app:layout_constraintEnd_toEndOf="@+id/tvNameContactDetail"
+        app:layout_constraintStart_toStartOf="@+id/tvNameContactDetail"
+        app:layout_constraintTop_toBottomOf="@+id/tvNameContactDetail" />
+
+    <TextView
+        android:id="@+id/tvPhoneContactDetail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="+7(926) 709 07 29"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sub_header_size"
+        app:layout_constraintEnd_toEndOf="@+id/tvEmailContactDetail"
+        app:layout_constraintStart_toStartOf="@+id/tvEmailContactDetail"
+        app:layout_constraintTop_toBottomOf="@+id/tvEmailContactDetail" />
+
+    <TextView
+        android:id="@+id/tvAddressContactDetail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:text="ул Атласова 7"
+        android:textColor="@color/black"
+        android:textSize="@dimen/sub_header_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvPhoneContactDetail"
+        app:layout_constraintStart_toStartOf="@+id/tvPhoneContactDetail"
+        app:layout_constraintTop_toBottomOf="@+id/tvPhoneContactDetail" />
+</androidx.constraintlayout.widget.ConstraintLayout>
