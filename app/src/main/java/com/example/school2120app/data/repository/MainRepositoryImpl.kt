@@ -6,6 +6,7 @@ import android.util.Log
 import com.davemorrissey.labs.subscaleview.ImageSource
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.Resource.*
+import com.example.school2120app.data.local.contacts.ContactDao
 import com.example.school2120app.data.local.menu.MenuDao
 import com.example.school2120app.data.local.news.NewsDao
 import com.example.school2120app.data.local.schedule.*
@@ -33,8 +34,9 @@ class MainRepositoryImpl(
     private val newsDao: NewsDao,
     private val scheduleDao: ScheduleDao,
     private val menuDao: MenuDao,
+    private val contactDao: ContactDao,
     private val scheduleParser: XlsxParser<ScheduleByBuilding>,
-    private val contactsParser: XlsxParser<ContactsList>
+    private val contactsParser: XlsxParser<ContactsList>,
 ) : MainRepository {
 
 
@@ -109,6 +111,44 @@ class MainRepositoryImpl(
             emit(Error("Отсутствует интернет соединение"))
             Log.d("Error", e.message!!)
         }
+        catch (e: SQLiteException) {
+            emit(Error("Ошибка базы данных"))
+            Log.d("Error", e.message!!)
+        }
+    }
+
+    override fun getContacts(fetchFromRemote: Boolean): Flow<Resource<List<ContactInfo>>> = flow {
+        emit(Loading())
+        try {
+            val localContactList = contactDao.getContactList()
+            val isDbEmpty = localContactList.isEmpty()
+            val loadFromCache = !isDbEmpty && !fetchFromRemote
+            if (loadFromCache){
+                emit(Success(data = localContactList.map { it.toContactInfo() }))
+                return@flow
+            }
+
+            val remoteContactsInfo = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
+                .filter { it.path.split("/")[1] == "Контакты" } // building вместо ТестРасписание
+                .map { it.toContactInfo() }.first()
+            val contactsFileByteStream = yandexCloudApi.downloadFile(remoteContactsInfo.fileUrl).byteStream()
+            val remoteContactsParsed =  contactsParser.parse(contactsFileByteStream)
+
+            contactDao.clearContactList()
+            contactDao.insertContactList(remoteContactsParsed.contacts.map { it.toContactInfoEntity() })
+
+            emit(Success(data = contactDao.getContactList().map { it.toContactInfo() }))
+
+        } catch (e: HttpException) {
+            emit(Error("Ошибка сервера"))
+            Log.d("Error", e.message())
+        } catch (e: IOException) {
+            emit(Error("Отсутсвует интернет соединение"))
+            Log.d("Error", e.message!!)
+        } catch (e: SQLiteException) {
+            emit(Error("Ошибка базы данных"))
+            Log.d("Error", e.message!!)
+        }
     }
 
     override fun getSchedule(grade: String, letter: String, building: String, weekday: String, fetchFromRemote: Boolean): Flow<Resource<List<GradeLesson>>> = flow {
@@ -138,30 +178,12 @@ class MainRepositoryImpl(
         emit(Loading())
         try {
             val url = previewUrl.replace("size=S", "size=XXXL")
-            val response = yandexCloudApi.getPreview(token = "OAuth $ACCESS_TOKEN", previewUrl = url)
+            val response =
+                yandexCloudApi.getPreview(token = "OAuth $ACCESS_TOKEN", previewUrl = url)
             val bmp = BitmapFactory.decodeStream(response.byteStream())
             val imageSource = ImageSource.bitmap(bmp)
             emit(Success(data = imageSource))
-        }catch (e: HttpException) {
-            emit(Error("Ошибка сервера"))
-            Log.d("Error", e.message())
-        } catch (e: IOException) {
-            emit(Error("Отсутсвует интернет соединение"))
-            Log.d("Error", e.message!!)
-        }
-    }
-    override fun getContacts(): Flow<Resource<List<ContactInfo>>> = flow {
-        emit(Loading())
-        try {
-            val remoteContactsInfo = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
-                .filter { it.path.split("/")[1] == "Контакты" } // building вместо ТестРасписание
-                .map { it.toContactInfo() }.first()
-
-            val contactsFileByteStream = yandexCloudApi.downloadFile(remoteContactsInfo.fileUrl).byteStream()
-            val remoteContactsParsed =  contactsParser.parse(contactsFileByteStream)
-            emit(Success(data = remoteContactsParsed.contacts))
-
-        }catch (e: HttpException) {
+        } catch (e: HttpException) {
             emit(Error("Ошибка сервера"))
             Log.d("Error", e.message())
         } catch (e: IOException) {

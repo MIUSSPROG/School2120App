@@ -1,5 +1,6 @@
 package com.example.school2120app.data.mapper
 
+import com.example.school2120app.data.local.contacts.ContactInfoEntity
 import com.example.school2120app.data.local.menu.MenuItemEntity
 import com.example.school2120app.data.local.news.NewsEntity
 import com.example.school2120app.data.remote.news.dto.NewsDto
@@ -28,6 +29,34 @@ fun MenuItemEntity.toMenuItem(): MenuItem{
         date = date.time,
         previewUrl = previewUrl,
         downloadUrl = downloadUrl
+    )
+}
+
+fun ContactInfoEntity.toContactInfo(): ContactInfo{
+    return ContactInfo(
+        position = position,
+        name = name,
+        address = address,
+        lat = lat,
+        lon = lon,
+        buildingType = buildingType,
+        phone = phone,
+        email = email,
+        photoUrl = photoUrl
+    )
+}
+
+fun ContactInfo.toContactInfoEntity(): ContactInfoEntity{
+    return ContactInfoEntity(
+        position = position,
+        name = name,
+        address = address,
+        lat = lat,
+        lon = lon,
+        buildingType = buildingType,
+        phone = phone,
+        email = email,
+        photoUrl = photoUrl
     )
 }
 

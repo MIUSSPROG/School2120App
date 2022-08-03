@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.example.school2120app.R
 import com.example.school2120app.databinding.FragmentContactDetailBinding
 import com.example.school2120app.domain.model.contacts.ContactInfo
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -34,10 +35,18 @@ class ContactsDetailFragment: BottomSheetDialogFragment() {
             tvNameContactDetail.text = contactItemInfo?.name
             tvPhoneContactDetail.text = contactItemInfo?.phone
             tvPositionContactDetail.text = contactItemInfo?.position
-            Glide.with(root.context)
-                .load(contactItemInfo?.photoUrl)
-                .circleCrop()
-                .into(imgvAvatarContactDetail)
+            if (contactItemInfo?.position == DIRECTOR_POSITION){
+                Glide.with(root.context)
+                    .load(R.drawable.director)
+                    .circleCrop()
+                    .into(imgvAvatarContactDetail)
+            }else {
+                Glide.with(root.context)
+                    .load(contactItemInfo?.photoUrl)
+                    .circleCrop()
+                    .placeholder(R.drawable.ic_percon)
+                    .into(imgvAvatarContactDetail)
+            }
 
             btnMailContactDetail.setOnClickListener {
                 contactItemInfo?.let {
@@ -70,5 +79,6 @@ class ContactsDetailFragment: BottomSheetDialogFragment() {
     companion object{
         const val REQUEST_CODE = "CONTACTS_DETAIL"
         const val EXTRA_CONTACT_SELECTED = "EXTRA_CONTACT_SELECTED"
+        const val DIRECTOR_POSITION = "Директор"
     }
 }

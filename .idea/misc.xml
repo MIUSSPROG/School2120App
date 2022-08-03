@@ -5,6 +5,7 @@
       <map>
         <entry key="app/src/main/res/drawable-v24/search_input_style.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/contact_round_recyclerview.xml" value="0.271" />
+        <entry key="app/src/main/res/drawable/ic_baseline_arrow_forward_ios_24.xml" value="0.2925" />
         <entry key="app/src/main/res/drawable/ic_school.xml" value="0.271" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.238" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3421875" />

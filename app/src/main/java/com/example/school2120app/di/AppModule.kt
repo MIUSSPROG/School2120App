@@ -71,7 +71,7 @@ object AppModule {
     fun provideNewsRepository(newsApi: NewsApi, yandexCloudApi: YandexCloudApi, db: MainDatabase,
                               scheduleParser: XlsxParser<ScheduleByBuilding>, contactsParser: XlsxParser<ContactsList>): MainRepository {
         return MainRepositoryImpl(newsApi, yandexCloudApi, newsDao = db.daoNews,
-            scheduleDao = db.daoSchedule, menuDao = db.daoMenu, scheduleParser =  scheduleParser, contactsParser = contactsParser)
+            scheduleDao = db.daoSchedule, menuDao = db.daoMenu, contactDao = db.daoContact, scheduleParser =  scheduleParser, contactsParser = contactsParser)
     }
 
     @Provides

@@ -1,9 +1,10 @@
 package com.example.school2120app.presentation.contacts
 
+import android.animation.ObjectAnimator
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
-import android.util.Log
+import android.util.Property
 import android.view.View
 import android.view.View.*
 import androidx.core.content.ContextCompat
@@ -13,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.school2120app.R
 import com.example.school2120app.core.util.ActionListener
-import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.Resource.*
 import com.example.school2120app.core.util.UIEvent
 import com.example.school2120app.databinding.FragmentContactsBinding
@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class ContactsFragment: Fragment(R.layout.fragment_contacts) {
+class ContactsFragment: Fragment(R.layout.fragment_contacts), android.view.animation.Animation.AnimationListener {
 
     private lateinit var binding: FragmentContactsBinding
     private val viewModel: ContactsViewModel by viewModels()
@@ -47,12 +47,58 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
 
         binding = FragmentContactsBinding.bind(view)
         MapKitFactory.initialize(context)
-//        initPlacesCoordinates()
 
         binding.apply {
             rvContacts.adapter = adapter
 
-            viewModel.getContacts()
+            var isContactsVisible = true
+            btnRvRemove.setOnClickListener {
+                if (isContactsVisible) {
+                    val translationAnimationDelta =
+                        layoutContacts.width.toFloat() - btnRvRemove.width.toFloat()
+                    animate(
+                        target = layoutContacts,
+                        property = TRANSLATION_X,
+                        from = 0f,
+                        to = translationAnimationDelta,
+                        duration = 1500
+                    )
+
+                    animate(
+                        target = btnRvRemove,
+                        property = ROTATION,
+                        from = 0f,
+                        to = 180f,
+                        duration = 1000
+                    )
+                }else{
+                    val translationAnimationDelta =
+                        layoutContacts.width.toFloat() - btnRvRemove.width.toFloat()
+                    animate(
+                        target = layoutContacts,
+                        property = TRANSLATION_X,
+                        from = translationAnimationDelta,
+                        to = 0f,
+                        duration = 1500
+                    )
+                    animate(
+                        target = btnRvRemove,
+                        property = ROTATION,
+                        from = -180f,
+                        to = 0f,
+                        duration = 1000
+                    )
+                }
+                isContactsVisible = !isContactsVisible
+
+            }
+
+            swipeRefreshLayoutContacts.setOnRefreshListener {
+                viewModel.getContacts(fetchFromRemote = true)
+                swipeRefreshLayoutContacts.isRefreshing = false
+            }
+
+            viewModel.getContacts(fetchFromRemote = false)
             viewModel.contactsLiveData.observe(viewLifecycleOwner){
                 when(it){
                     is Loading -> {
@@ -62,7 +108,6 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
                         pbContactsLoading.visibility = INVISIBLE
                         it.data?.let { it1 -> initPlacesCoordinates(it1) }
                         adapter.submitList(it.data)
-//                        Log.d("result", it.data.toString())
                     }
                 }
             }
@@ -82,7 +127,8 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
             val contactInfo =  data.get(EXTRA_CONTACT_SELECTED) as ContactInfo
             binding.mapView.map.move(CameraPosition(
                 Point(contactInfo.lat, contactInfo.lon), 17.5f, 0.0f, 0.0f)
-                , Animation(Animation.Type.SMOOTH, 0f), null)
+                , Animation(Animation.Type.SMOOTH, 0f), null
+            )
         }
     }
 
@@ -96,6 +142,18 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
         super.onStart()
         binding.mapView.onStart()
         MapKitFactory.getInstance().onStart()
+    }
+
+    private fun animate(
+        target: View,
+        property: Property<View, Float>,
+        from: Float,
+        to: Float,
+        duration: Long
+    ){
+        val animation = ObjectAnimator.ofFloat(target, property, from, to)
+        animation.duration = duration
+        animation.start()
     }
 
     private fun initPlacesCoordinates(coords: List<ContactInfo>){
@@ -131,5 +189,18 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
         const val YANDEX_MAP_API_KEY = "00853820-db0b-432b-b76d-cef71a379ae4"
         const val SCHOOL = "Школа"
         const val KINDERGARTEN = "Садик"
+    }
+
+
+    override fun onAnimationStart(animation: android.view.animation.Animation?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAnimationEnd(animation: android.view.animation.Animation?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onAnimationRepeat(animation: android.view.animation.Animation?) {
+        TODO("Not yet implemented")
     }
 }

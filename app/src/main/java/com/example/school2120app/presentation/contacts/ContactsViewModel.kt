@@ -28,9 +28,9 @@ class ContactsViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun getContacts(){
+    fun getContacts(fetchFromRemote: Boolean){
         viewModelScope.launch {
-            getContactsUsecase().onEach {
+            getContactsUsecase(fetchFromRemote).onEach {
                 when(it){
                     is Loading -> {
                         _contactsLiveData.postValue(Loading())
