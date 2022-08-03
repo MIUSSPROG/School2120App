@@ -12,9 +12,11 @@ import com.example.school2120app.R
 import com.example.school2120app.data.xlsx.ScheduleParser
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
+import okio.Path.Companion.toPath
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Files
+import java.nio.file.Files.delete
 import java.nio.file.Paths
 
 sealed class Resource<T>(val data: T? = null, val message: String? = null) {
@@ -40,22 +42,20 @@ class FileCaching{
     companion object {
         fun save(stream: InputStream, filePrefix: String): String {
             val cachePathStr = "/data/data/com.example.school2120app/cache"
-            var isExisted = false
+            var isDeleted = false
             var path = ""
             File(ScheduleParser.cachePath).walk().forEach {
                 val splitPath = it.toString().split('/')
                 if (splitPath[splitPath.size - 1].startsWith(filePrefix)) {
-                    isExisted = true
                     path = it.toString()
+                    delete(it.toPath())
                     println(path)
+                    val cachePath = Paths.get(cachePathStr)
+                    val filePath = Files.createTempFile(cachePath, filePrefix, ".xlsx")
+                    Files.write(filePath, stream.readBytes()).toString()
+                    path = filePath.toString()
                     return@forEach
                 }
-            }
-            if (!isExisted) {
-                val cachePath = Paths.get(cachePathStr)
-                val filePath = Files.createTempFile(cachePath, filePrefix, ".xlsx")
-                Files.write(filePath, stream.readBytes()).toString()
-                path = filePath.toString()
             }
             return path
         }

@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class ContactsFragment: Fragment(R.layout.fragment_contacts), android.view.animation.Animation.AnimationListener {
+class ContactsFragment: Fragment(R.layout.fragment_contacts) {
 
     private lateinit var binding: FragmentContactsBinding
     private val viewModel: ContactsViewModel by viewModels()
@@ -84,7 +84,7 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts), android.view.anima
                     animate(
                         target = btnRvRemove,
                         property = ROTATION,
-                        from = -180f,
+                        from = 180f,
                         to = 0f,
                         duration = 1000
                     )
@@ -188,19 +188,6 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts), android.view.anima
     companion object{
         const val YANDEX_MAP_API_KEY = "00853820-db0b-432b-b76d-cef71a379ae4"
         const val SCHOOL = "Школа"
-        const val KINDERGARTEN = "Садик"
     }
 
-
-    override fun onAnimationStart(animation: android.view.animation.Animation?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onAnimationEnd(animation: android.view.animation.Animation?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onAnimationRepeat(animation: android.view.animation.Animation?) {
-        TODO("Not yet implemented")
-    }
 }
