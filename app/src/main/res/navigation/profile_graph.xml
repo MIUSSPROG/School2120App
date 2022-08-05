@@ -7,7 +7,16 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.school2120app.presentation.profile.ProfileFragment"
+        android:name="com.example.school2120app.presentation.profile.ProfileLoginFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile_login" >
+        <action
+            android:id="@+id/action_profileFragment_to_profileDocumentsFragment"
+            app:destination="@id/profileDocumentsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileDocumentsFragment"
+        android:name="com.example.school2120app.presentation.profile.ProfileDocumentsFragment"
+        android:label="fragment_profile_documents"
+        tools:layout="@layout/fragment_profile_documents" />
 </navigation>
