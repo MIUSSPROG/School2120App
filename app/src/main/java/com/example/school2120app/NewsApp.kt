@@ -21,6 +21,6 @@ class NewsApp: Application(){
     override fun onCreate() {
         super.onCreate()
         instance = this
-        MapKitFactory.setApiKey(ContactsFragment.YANDEX_MAP_API_KEY)
+        MapKitFactory.setApiKey(BuildConfig.YANDEX_MAP_API_KEY)
     }
 }

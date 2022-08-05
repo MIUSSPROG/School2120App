@@ -186,7 +186,6 @@ class ContactsFragment: Fragment(R.layout.fragment_contacts) {
     }
 
     companion object{
-        const val YANDEX_MAP_API_KEY = "00853820-db0b-432b-b76d-cef71a379ae4"
         const val SCHOOL = "Школа"
     }
 
