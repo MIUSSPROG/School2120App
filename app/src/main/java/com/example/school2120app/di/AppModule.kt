@@ -1,6 +1,7 @@
 package com.example.school2120app.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
 import com.example.school2120app.data.local.MainDatabase
 import com.example.school2120app.data.remote.news.NewsApi
@@ -15,11 +16,13 @@ import com.example.school2120app.domain.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module

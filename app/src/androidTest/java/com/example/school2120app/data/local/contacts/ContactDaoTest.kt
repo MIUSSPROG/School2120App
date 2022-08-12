@@ -3,25 +3,32 @@ package com.example.school2120app.data.local.contacts
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.SmallTest
 import com.example.school2120app.data.local.MainDatabase
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 //import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import com.google.common.truth.Truth.assertThat
+import junit.framework.TestCase
 import kotlinx.coroutines.runBlocking
+import org.junit.Rule
+import org.junit.runner.RunWith
+import javax.inject.Inject
+import javax.inject.Named
 
 //@ExperimentalCoroutinesApi
-@RunWith(AndroidJUnit4::class)
 //@SmallTest
-class ContactDaoTest {
+//@HiltAndroidTest
+class ContactDaoTest: TestCase() {
 
 //    @Rule
 //    var instantTaskExecutorRule = TaskExecutor()
 
+//    @Rule
+//    var hiltRule = HiltAndroidRule(this)
+
+//    @Inject
+//    @Named("test_db")
     private lateinit var database: MainDatabase
     private lateinit var contactDao: ContactDao
 
@@ -32,6 +39,8 @@ class ContactDaoTest {
             MainDatabase::class.java
         ).allowMainThreadQueries().build()
         contactDao = database.daoContact
+//        hiltRule.inject()
+//        contactDao = database.daoContact
     }
 
     @After
