@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteException
 import android.graphics.BitmapFactory
 import android.util.Log
 import com.davemorrissey.labs.subscaleview.ImageSource
+import com.example.school2120app.BuildConfig.YANDEX_CLOUD_ACCESS_TOKEN
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.Resource.*
 import com.example.school2120app.data.local.contacts.ContactDao
@@ -13,7 +14,6 @@ import com.example.school2120app.data.local.schedule.*
 import com.example.school2120app.data.mapper.*
 import com.example.school2120app.data.remote.news.NewsApi
 import com.example.school2120app.data.remote.YandexCloudApi
-import com.example.school2120app.data.remote.YandexCloudApi.Companion.ACCESS_TOKEN
 import com.example.school2120app.data.xlsx.XlsxParser
 import com.example.school2120app.domain.model.contacts.ContactInfo
 import com.example.school2120app.domain.model.contacts.ContactsList
@@ -98,7 +98,7 @@ class MainRepositoryImpl(
                 return@flow
             }
 
-            val remoteMenus = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
+            val remoteMenus = yandexCloudApi.getAllFiles(YANDEX_CLOUD_ACCESS_TOKEN).fileItems
                 .filter { it.path.split("/")[1] == "Меню" }
                 .map { it.toMenuItem() }
 
@@ -129,7 +129,7 @@ class MainRepositoryImpl(
                 return@flow
             }
 
-            val remoteContactsInfo = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
+            val remoteContactsInfo = yandexCloudApi.getAllFiles(YANDEX_CLOUD_ACCESS_TOKEN).fileItems
                 .filter { it.path.split("/")[1] == "Контакты" } // building вместо ТестРасписание
                 .map { it.toContactInfo() }.first()
             val contactsFileByteStream = yandexCloudApi.downloadFile(remoteContactsInfo.fileUrl).byteStream()
@@ -191,7 +191,7 @@ class MainRepositoryImpl(
         try {
             val url = previewUrl.replace("size=S", "size=XXXL")
             val response =
-                yandexCloudApi.getPreview(token = "OAuth $ACCESS_TOKEN", previewUrl = url)
+                yandexCloudApi.getPreview(token = "OAuth $YANDEX_CLOUD_ACCESS_TOKEN", previewUrl = url)
             val bmp = BitmapFactory.decodeStream(response.byteStream())
             val imageSource = ImageSource.bitmap(bmp)
             emit(Success(data = imageSource))
@@ -207,7 +207,7 @@ class MainRepositoryImpl(
     override fun loadSchedule(): Flow<Resource<Unit>> = flow {
         emit(Loading())
         try {
-            val remoteScheduleInfo = yandexCloudApi.getAllFiles(ACCESS_TOKEN).fileItems
+            val remoteScheduleInfo = yandexCloudApi.getAllFiles(YANDEX_CLOUD_ACCESS_TOKEN).fileItems
                 .filter { it.path.split("/")[1] == "ТестРасписание" }
                 .map { it.toScheduleItem() }.first()
 

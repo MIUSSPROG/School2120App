@@ -21,6 +21,5 @@ interface YandexCloudApi {
 
     companion object{
         const val BASE_URL = "https://cloud-api.yandex.net"
-        const val ACCESS_TOKEN = "AQAEA7qjvMhBAAcXnv8LaFDp2UMJhg5PkkVo7Ko"
     }
 }

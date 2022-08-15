@@ -41,22 +41,26 @@ class FileCaching{
     companion object {
         fun save(stream: InputStream, filePrefix: String): String {
             val cachePathStr = "/data/data/com.example.school2120app/cache"
-            var isDeleted = false
-            var path = ""
-            File(ScheduleParser.cachePath).walk().forEach {
-                val splitPath = it.toString().split('/')
-                if (splitPath[splitPath.size - 1].startsWith(filePrefix)) {
-                    path = it.toString()
-                    delete(it.toPath())
-                    println(path)
-                    val cachePath = Paths.get(cachePathStr)
-                    val filePath = Files.createTempFile(cachePath, filePrefix, ".xlsx")
-                    Files.write(filePath, stream.readBytes()).toString()
-                    path = filePath.toString()
-                    return@forEach
+            val cacheDir = File(ScheduleParser.cachePath)
+            // если кэш директория не пустая, находим нужный кэш и пересоздаем
+            if (cacheDir.listFiles().isNotEmpty()) {
+                cacheDir.walk().forEach {
+                    val splitPath = it.toString().split('/')
+                    if (splitPath[splitPath.size - 1].startsWith(filePrefix)) {
+                        delete(it.toPath())
+                        return getFilePath(cachePathStr = cachePathStr, filePrefix = filePrefix, stream = stream)
+                    }
                 }
             }
-            return path
+            // если кэш директория пустая то создаем в ней файл
+            return getFilePath(cachePathStr = cachePathStr, filePrefix = filePrefix, stream = stream)
+        }
+
+        private fun getFilePath(cachePathStr: String, filePrefix: String, stream: InputStream): String {
+            val cachePath = Paths.get(cachePathStr)
+            val filePath = Files.createTempFile(cachePath, filePrefix, ".xlsx")
+            Files.write(filePath, stream.readBytes()).toString()
+            return filePath.toString()
         }
 
     }

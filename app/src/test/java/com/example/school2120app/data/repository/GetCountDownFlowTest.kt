@@ -8,16 +8,16 @@ import org.junit.Test
 
 class GetCountDownFlowTest {
 
-    private lateinit var getCountDownFlowUsecase: GetCountDownFlowUsecase
-
-    @Before
-    fun setUp(){
-        val testRepository = MainRepositoryImpl()
-        getCountDownFlowUsecase = GetCountDownFlowUsecase(repository = )
-    }
-
-    @Test
-    fun `countDownFlow, properly counts down from 5 to 0`() {
-        getCountDownFlowUsecase
-    }
+//    private lateinit var getCountDownFlowUsecase: GetCountDownFlowUsecase
+//
+//    @Before
+//    fun setUp(){
+//        val testRepository = MainRepositoryImpl()
+//        getCountDownFlowUsecase = GetCountDownFlowUsecase(repository = )
+//    }
+//
+//    @Test
+//    fun `countDownFlow, properly counts down from 5 to 0`() {
+//        getCountDownFlowUsecase
+//    }
 }
