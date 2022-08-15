@@ -12,7 +12,6 @@ import com.example.school2120app.R
 import com.example.school2120app.data.xlsx.ScheduleParser
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
-import okio.Path.Companion.toPath
 import java.io.File
 import java.io.InputStream
 import java.nio.file.Files

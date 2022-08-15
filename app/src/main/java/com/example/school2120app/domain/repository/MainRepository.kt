@@ -17,4 +17,5 @@ interface MainRepository {
     fun getMenus(fetchFromRemote: Boolean): Flow<Resource<List<MenuItem>>>
     fun getPreview(previewUrl: String): Flow<Resource<ImageSource>>
     fun getContacts(fetchFromRemote: Boolean): Flow<Resource<List<ContactInfo>>>
+    fun getCountDownFlow(): Flow<Int>
 }

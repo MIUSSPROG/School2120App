@@ -22,6 +22,7 @@ import com.example.school2120app.domain.model.news.News
 import com.example.school2120app.domain.model.schedule.local.GradeLesson
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.repository.MainRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
@@ -148,6 +149,17 @@ class MainRepositoryImpl(
         } catch (e: SQLiteException) {
             emit(Error("Ошибка базы данных"))
             Log.d("Error", e.message!!)
+        }
+    }
+
+    override fun getCountDownFlow(): Flow<Int> = flow {
+        val startingValue = 5
+        var currentValue = startingValue
+        emit(startingValue)
+        while (currentValue > 0){
+            delay(1000L)
+            currentValue--
+            emit(currentValue)
         }
     }
 
