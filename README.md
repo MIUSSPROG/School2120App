@@ -1,4 +1,4 @@
-# School2120App Video
+# School2120App Демонстрационное видео
 крайняя ветка - testing_mockito
 
 
