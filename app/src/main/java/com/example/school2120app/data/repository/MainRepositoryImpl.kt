@@ -152,16 +152,6 @@ class MainRepositoryImpl(
         }
     }
 
-    override fun getCountDownFlow(): Flow<Int> = flow {
-        val startingValue = 5
-        var currentValue = startingValue
-        emit(startingValue)
-        while (currentValue > 0){
-            delay(1000L)
-            currentValue--
-            emit(currentValue)
-        }
-    }
 
     override fun getSchedule(grade: String, letter: String, building: String, weekday: String, fetchFromRemote: Boolean): Flow<Resource<List<GradeLesson>>> = flow {
         emit(Loading())
