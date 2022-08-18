@@ -6,7 +6,23 @@
 + Личный кабинет(Электронный документооборот)
 + Контакты административного персонала
 
-крайняя ветка - testing_mockito
+## Стек технологий
++ Clean code
++ MVVM
++ Jetpack navigation component
++ Dagger(Hilt)
++ Room
++ Retrofit
++ Coroutines
++ Flow
++ Glide, Picasso
++ Yandex map API
++ Apache POI
++ Truth
++ Mockito
++ Turbine
+
+## крайняя ветка - testing_mockito
 
 
 
