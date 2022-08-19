@@ -22,7 +22,7 @@
 + Mockito
 + Turbine
 
-## крайняя ветка - testing_mockito
+## крайняя ветка - account_login
 
 
 
