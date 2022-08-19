@@ -4,11 +4,17 @@ import com.example.school2120app.data.local.contacts.ContactInfoEntity
 import com.example.school2120app.data.local.menu.MenuItemEntity
 import com.example.school2120app.data.local.news.NewsEntity
 import com.example.school2120app.data.remote.news.dto.NewsDto
+import com.example.school2120app.data.remote.profile.dto.ProfileInfoDto
+import com.example.school2120app.data.remote.profile.dto.UserDocDto
+import com.example.school2120app.data.remote.profile.dto.UserDocHistoryDto
 import com.example.school2120app.data.remote.yandexCloudDto.FileItemDto
 import com.example.school2120app.domain.model.contacts.ContactInfo
 import com.example.school2120app.domain.model.contacts.ContactItem
 import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
+import com.example.school2120app.domain.model.profile.ProfileInfo
+import com.example.school2120app.domain.model.profile.UserDoc
+import com.example.school2120app.domain.model.profile.UserDocHistory
 import com.example.school2120app.domain.model.schedule.remote.ScheduleItem
 import java.text.SimpleDateFormat
 import java.util.*
@@ -66,6 +72,45 @@ fun MenuItem.toToMenuItemEntity(): MenuItemEntity{
         date = Calendar.getInstance().apply { time = date },
         previewUrl = previewUrl,
         downloadUrl = downloadUrl
+    )
+}
+
+
+fun ProfileInfoDto.toProfileInfo(): ProfileInfo{
+    return ProfileInfo(
+        id = id ?: -1,
+        surname = surname ?: "",
+        name = name ?: "",
+        patronymic = patronymic ?: "",
+        email = email ?: "",
+        place = place ?: "",
+        functionality = functionality ?: "",
+        docs = docs.map { mapOf(it.keys.first() to it.values.first().toUserDoc()) },
+        docsHistory = docsHistory.map { mapOf(it.keys.first() to it.values.first().toUserDocHistory()) },
+        error = error ?: ""
+    )
+}
+
+fun UserDocHistoryDto.toUserDocHistory(): UserDocHistory{
+    return UserDocHistory(
+        id = id,
+        date = date ?: "",
+        title = title ?: ""
+    )
+}
+
+fun UserDocDto.toUserDoc(): UserDoc{
+    return UserDoc(
+        id = id,
+        title = title ?: "Неизвестный документ",
+        type = type ?: "Неизветсный тип документа",
+        subject = subject ?: "Неизветсная тема документа",
+        endDate = endDate ?: "Дата окончания не указана",
+        isSubscribe = isSubscribe,
+        isUnsubscribe = isUnsubscribe,
+        fileUrl = file ?: "",
+        subLink = subLink ?: "",
+        unSubLink = unsubLink ?: ""
     )
 }
 

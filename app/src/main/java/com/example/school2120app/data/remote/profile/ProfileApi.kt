@@ -1,19 +1,24 @@
 package com.example.school2120app.data.remote.profile
 
 import com.example.school2120app.data.remote.profile.dto.ProfileInfoDto
-import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import com.example.school2120app.data.remote.profile.dto.StatInfoDto
+import okhttp3.ResponseBody
+import retrofit2.http.*
 
 interface ProfileApi {
 
     @FormUrlEncoded
     @POST("user.php")
-    fun login(
-        @Field("user") email: String?,
-        @Field("passwd") passwd: String?
+    suspend fun login(
+        @Field("user") email: String,
+        @Field("passwd") passwd: String
     ): ProfileInfoDto
+
+    @GET("docs_stat.php")
+    suspend fun getUsersStat(): StatInfoDto
+
+    @GET
+    suspend fun subscribeDocument(@Url url: String): ResponseBody
 
     companion object{
         const val BASE_URL = "http://intranet.sch2120-do.ru/api/"

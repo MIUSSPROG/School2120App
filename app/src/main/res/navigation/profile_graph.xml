@@ -18,5 +18,9 @@
         android:id="@+id/profileDocumentsFragment"
         android:name="com.example.school2120app.presentation.profile.ProfileDocumentsFragment"
         android:label="fragment_profile_documents"
-        tools:layout="@layout/fragment_profile_documents" />
+        tools:layout="@layout/fragment_profile_documents" >
+        <argument
+            android:name="profileInfo"
+            app:argType="com.example.school2120app.domain.model.profile.ProfileInfo" />
+    </fragment>
 </navigation>

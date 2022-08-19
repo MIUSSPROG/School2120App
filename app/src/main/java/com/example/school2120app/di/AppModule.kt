@@ -5,9 +5,9 @@ import androidx.room.Room
 import com.example.school2120app.data.local.MainDatabase
 import com.example.school2120app.data.remote.news.NewsApi
 import com.example.school2120app.data.remote.YandexCloudApi
+import com.example.school2120app.data.remote.profile.ProfileApi
 import com.example.school2120app.data.repository.MainRepositoryImpl
 import com.example.school2120app.data.xlsx.XlsxParser
-import com.example.school2120app.domain.model.contacts.ContactInfo
 import com.example.school2120app.domain.model.contacts.ContactsList
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.repository.MainRepository
@@ -15,6 +15,7 @@ import com.example.school2120app.domain.usecase.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -25,6 +26,23 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton
+    fun provideProfileApi(): ProfileApi{
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+        val builder = OkHttpClient.Builder()
+        builder.networkInterceptors().add(httpLoggingInterceptor)
+        val okHttpClient = builder.build()
+
+        return Retrofit.Builder()
+            .baseUrl(ProfileApi.BASE_URL)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ProfileApi::class.java)
+    }
 
     @Provides
     @Singleton
@@ -68,10 +86,18 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNewsRepository(newsApi: NewsApi, yandexCloudApi: YandexCloudApi, db: MainDatabase,
+    fun provideNewsRepository(profileApi: ProfileApi, newsApi: NewsApi, yandexCloudApi: YandexCloudApi, db: MainDatabase,
                               scheduleParser: XlsxParser<ScheduleByBuilding>, contactsParser: XlsxParser<ContactsList>): MainRepository {
-        return MainRepositoryImpl(newsApi, yandexCloudApi, newsDao = db.daoNews,
-            scheduleDao = db.daoSchedule, menuDao = db.daoMenu, contactDao = db.daoContact, scheduleParser =  scheduleParser, contactsParser = contactsParser)
+        return MainRepositoryImpl(
+            profileApi = profileApi,
+            newsApi = newsApi,
+            yandexCloudApi = yandexCloudApi,
+            newsDao = db.daoNews,
+            scheduleDao = db.daoSchedule,
+            menuDao = db.daoMenu,
+            contactDao = db.daoContact,
+            scheduleParser =  scheduleParser,
+            contactsParser = contactsParser)
     }
 
     @Provides
@@ -120,5 +146,11 @@ object AppModule {
     @Singleton
     fun provideGetContactsUsecase(repository: MainRepository): GetContactsUsecase{
         return GetContactsUsecase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSignInUsecase(repository: MainRepository): SignInUsecase{
+        return SignInUsecase(repository)
     }
 }

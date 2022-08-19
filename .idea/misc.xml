@@ -10,6 +10,7 @@
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.238" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/contact_rv_item.xml" value="0.3142440795898436" />
+        <entry key="app/src/main/res/layout/doc_rv_item.xml" value="0.34843950406156476" />
         <entry key="app/src/main/res/layout/fragment_choose_options.xml" value="0.3390625" />
         <entry key="app/src/main/res/layout/fragment_contact_detail.xml" value="0.3385307654502709" />
         <entry key="app/src/main/res/layout/fragment_contacts.xml" value="0.29394836425781246" />
@@ -20,6 +21,7 @@
         <entry key="app/src/main/res/layout/fragment_news_list.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/fragment_profile_documents.xml" value="0.37018066406250005" />
+        <entry key="app/src/main/res/layout/fragment_profile_login.xml" value="0.2934697164639085" />
         <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/menu_rv_item.xml" value="0.3380208333333333" />
         <entry key="app/src/main/res/layout/news_rv_item.xml" value="0.3421875" />

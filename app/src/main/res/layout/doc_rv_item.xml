@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutRvItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvDocNameRvItem"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="20dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="@string/doc_name"
+        android:textColor="@color/blue_black"
+        android:textSize="@dimen/header_size"
+        app:layout_constraintEnd_toStartOf="@+id/imgvDocDetailRvItem"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvEndDateRvItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="20/02/2020"
+        android:textSize="@dimen/sub_header_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tvDocNameRvItem"
+        app:layout_constraintTop_toBottomOf="@+id/tvDocNameRvItem" />
+
+    <ImageView
+        android:id="@+id/imgvDocDetailRvItem"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_eye" />
+
+    <TextView
+        android:id="@+id/tvExpiredRvItem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/montserrat_medium"
+        android:text="Срок истек"
+        android:textColor="@color/expired"
+        android:textSize="@dimen/sub_header_size"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/tvEndDateRvItem"
+        app:layout_constraintStart_toEndOf="@+id/tvEndDateRvItem"
+        app:layout_constraintTop_toTopOf="@+id/tvEndDateRvItem" />
+</androidx.constraintlayout.widget.ConstraintLayout>

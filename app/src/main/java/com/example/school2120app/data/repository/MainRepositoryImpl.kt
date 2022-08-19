@@ -14,11 +14,13 @@ import com.example.school2120app.data.local.schedule.*
 import com.example.school2120app.data.mapper.*
 import com.example.school2120app.data.remote.news.NewsApi
 import com.example.school2120app.data.remote.YandexCloudApi
+import com.example.school2120app.data.remote.profile.ProfileApi
 import com.example.school2120app.data.xlsx.XlsxParser
 import com.example.school2120app.domain.model.contacts.ContactInfo
 import com.example.school2120app.domain.model.contacts.ContactsList
 import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
+import com.example.school2120app.domain.model.profile.ProfileInfo
 import com.example.school2120app.domain.model.schedule.local.GradeLesson
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.repository.MainRepository
@@ -30,6 +32,7 @@ import java.io.IOException
 import java.sql.SQLException
 
 class MainRepositoryImpl(
+    private val profileApi: ProfileApi,
     private val newsApi: NewsApi,
     private val yandexCloudApi: YandexCloudApi,
     private val newsDao: NewsDao,
@@ -149,6 +152,25 @@ class MainRepositoryImpl(
         } catch (e: SQLiteException) {
             emit(Error("Ошибка базы данных"))
             Log.d("Error", e.message!!)
+        }
+    }
+
+    override fun signIn(login: String, password: String): Flow<Resource<ProfileInfo>> = flow {
+        emit(Loading())
+        try {
+            val profileInfo = profileApi.login(login, password).toProfileInfo()
+            emit(Success(data = profileInfo))
+        }catch (e: HttpException) {
+            emit(Error("Ошибка сервера"))
+            Log.d("Error", e.message())
+        } catch (e: IOException) {
+            emit(Error("Отсутсвует интернет соединение"))
+            Log.d("Error", e.message!!)
+        }
+        catch (e: Exception){
+            emit(Error("Неизвестная ошибка"))
+            Log.d("Error", e.message!!)
+            Log.d("Error", e.stackTraceToString())
         }
     }
 
