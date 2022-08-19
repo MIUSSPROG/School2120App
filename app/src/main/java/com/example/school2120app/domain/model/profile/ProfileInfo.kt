@@ -1,9 +1,5 @@
 package com.example.school2120app.domain.model.profile
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
 data class ProfileInfo(
     val id: Int,
     val surname: String,
@@ -15,4 +11,18 @@ data class ProfileInfo(
     val docs: List<Map<String, UserDoc>>,
     val docsHistory: List<Map<String, UserDocHistory>>,
     val error: String
-): Parcelable
+){
+    fun toProfileDocs(): ProfileDocs{
+        return ProfileDocs(
+            id = id,
+            surname = surname,
+            name = name,
+            patronymic = patronymic,
+            email = email,
+            place = place,
+            functionality = functionality,
+            mutableListOf<UserDoc>(),
+            mutableListOf<UserDoc>()
+        )
+    }
+}

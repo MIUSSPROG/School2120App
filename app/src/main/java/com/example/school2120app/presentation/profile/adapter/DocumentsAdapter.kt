@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.school2120app.core.util.ActionListener
+import com.example.school2120app.core.util.HelperMethods
 import com.example.school2120app.databinding.DocRvItemBinding
-import com.example.school2120app.domain.model.contacts.ContactInfo
 import com.example.school2120app.domain.model.profile.UserDoc
 
 class DocumentsAdapter(
@@ -20,6 +20,11 @@ class DocumentsAdapter(
             binding.apply {
                 tvDocNameRvItem.text = item.title
                 tvEndDateRvItem.text = item.endDate
+                if (HelperMethods.isDateToCome(item.endDate)){
+                    tvExpiredRvItem.visibility = View.INVISIBLE
+                }else{
+                    tvExpiredRvItem.visibility = View.VISIBLE
+                }
                 imgvDocDetailRvItem.setOnClickListener {
                     actionListener.onItemClicked(item)
                 }

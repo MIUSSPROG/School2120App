@@ -8,6 +8,7 @@ import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.Resource.*
 import com.example.school2120app.core.util.UIEvent
 import com.example.school2120app.domain.model.contacts.ContactInfo
+import com.example.school2120app.domain.model.profile.ProfileDocs
 import com.example.school2120app.domain.model.profile.ProfileInfo
 import com.example.school2120app.domain.usecase.SignInUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +25,8 @@ class ProfileLoginViewModel @Inject constructor(
     private val signInUsecase: SignInUsecase
 ): ViewModel() {
 
-    private val _signInLiveData = MutableLiveData<Resource<ProfileInfo>>()
-    val signInLiveData: LiveData<Resource<ProfileInfo>> = _signInLiveData
+    private val _signInLiveData = MutableLiveData<Resource<ProfileDocs>>()
+    val signInLiveData: LiveData<Resource<ProfileDocs>> = _signInLiveData
 
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()

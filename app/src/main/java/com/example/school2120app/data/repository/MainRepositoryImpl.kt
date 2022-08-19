@@ -7,6 +7,8 @@ import com.davemorrissey.labs.subscaleview.ImageSource
 import com.example.school2120app.BuildConfig.YANDEX_CLOUD_ACCESS_TOKEN
 import com.example.school2120app.core.util.Resource
 import com.example.school2120app.core.util.Resource.*
+import com.example.school2120app.core.util.SIGNED_DOC
+import com.example.school2120app.core.util.UNSIGNED_DOC
 import com.example.school2120app.data.local.contacts.ContactDao
 import com.example.school2120app.data.local.menu.MenuDao
 import com.example.school2120app.data.local.news.NewsDao
@@ -20,7 +22,9 @@ import com.example.school2120app.domain.model.contacts.ContactInfo
 import com.example.school2120app.domain.model.contacts.ContactsList
 import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
+import com.example.school2120app.domain.model.profile.ProfileDocs
 import com.example.school2120app.domain.model.profile.ProfileInfo
+import com.example.school2120app.domain.model.profile.UserDoc
 import com.example.school2120app.domain.model.schedule.local.GradeLesson
 import com.example.school2120app.domain.model.schedule.local.ScheduleByBuilding
 import com.example.school2120app.domain.repository.MainRepository
@@ -155,11 +159,12 @@ class MainRepositoryImpl(
         }
     }
 
-    override fun signIn(login: String, password: String): Flow<Resource<ProfileInfo>> = flow {
+    override fun signIn(login: String, password: String): Flow<Resource<ProfileDocs>> = flow {
         emit(Loading())
         try {
             val profileInfo = profileApi.login(login, password).toProfileInfo()
-            emit(Success(data = profileInfo))
+            val sortedDocs = sortDocuments(profileInfo = profileInfo)
+            emit(Success(data = sortedDocs))
         }catch (e: HttpException) {
             emit(Error("Ошибка сервера"))
             Log.d("Error", e.message())
@@ -174,6 +179,34 @@ class MainRepositoryImpl(
         }
     }
 
+    private fun sortDocuments(profileInfo: ProfileInfo): ProfileDocs{
+        val subscribedDocs = mutableListOf<UserDoc>()
+        val unsubscribedDocs = mutableListOf<UserDoc>()
+        val profileDocs = profileInfo.toProfileDocs()
+        loop@ for (doc in profileInfo.docs){
+            val curDoc = doc.values.first()
+            for (docHistory in profileInfo.docsHistory){
+                val curDocHistory = docHistory.values.first()
+                if (curDoc.id == curDocHistory.id){
+                    when(curDocHistory.title){
+                        SIGNED_DOC -> {
+                            subscribedDocs.add(curDoc)
+                            continue@loop
+                        }
+                        UNSIGNED_DOC -> {
+                            unsubscribedDocs.add(curDoc)
+                            continue@loop
+                        }
+                    }
+
+                }
+            }
+            unsubscribedDocs.add(curDoc)
+        }
+        profileDocs.subscribedDocs.addAll(subscribedDocs)
+        profileDocs.unsubscribedDocs.addAll(unsubscribedDocs)
+        return profileDocs
+    }
 
     override fun getSchedule(grade: String, letter: String, building: String, weekday: String, fetchFromRemote: Boolean): Flow<Resource<List<GradeLesson>>> = flow {
         emit(Loading())

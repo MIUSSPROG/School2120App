@@ -37,6 +37,9 @@ interface ActionListener<in T> {
     fun onItemClicked(item: T, view: View? = null)
 }
 
+const val SIGNED_DOC = "Подписание документа"
+const val UNSIGNED_DOC = "Отказ от подписания документа"
+
 class FileCaching{
     companion object {
         fun save(stream: InputStream, filePrefix: String): String {

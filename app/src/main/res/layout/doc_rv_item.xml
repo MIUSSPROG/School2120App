@@ -53,7 +53,7 @@
         android:text="Срок истек"
         android:textColor="@color/expired"
         android:textSize="@dimen/sub_header_size"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/tvEndDateRvItem"
         app:layout_constraintStart_toEndOf="@+id/tvEndDateRvItem"
         app:layout_constraintTop_toTopOf="@+id/tvEndDateRvItem" />

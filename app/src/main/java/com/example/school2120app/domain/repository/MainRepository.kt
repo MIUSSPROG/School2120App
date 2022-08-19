@@ -5,6 +5,7 @@ import com.example.school2120app.core.util.Resource
 import com.example.school2120app.domain.model.contacts.ContactInfo
 import com.example.school2120app.domain.model.menu.remote.MenuItem
 import com.example.school2120app.domain.model.news.News
+import com.example.school2120app.domain.model.profile.ProfileDocs
 import com.example.school2120app.domain.model.profile.ProfileInfo
 import com.example.school2120app.domain.model.schedule.local.GradeLesson
 import kotlinx.coroutines.flow.Flow
@@ -18,5 +19,5 @@ interface MainRepository {
     fun getMenus(fetchFromRemote: Boolean): Flow<Resource<List<MenuItem>>>
     fun getPreview(previewUrl: String): Flow<Resource<ImageSource>>
     fun getContacts(fetchFromRemote: Boolean): Flow<Resource<List<ContactInfo>>>
-    fun signIn(login: String, password: String): Flow<Resource<ProfileInfo>>
+    fun signIn(login: String, password: String): Flow<Resource<ProfileDocs>>
 }

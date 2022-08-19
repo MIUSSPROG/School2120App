@@ -20,7 +20,7 @@
         android:label="fragment_profile_documents"
         tools:layout="@layout/fragment_profile_documents" >
         <argument
-            android:name="profileInfo"
-            app:argType="com.example.school2120app.domain.model.profile.ProfileInfo" />
+            android:name="profileDocs"
+            app:argType="com.example.school2120app.domain.model.profile.ProfileDocs" />
     </fragment>
 </navigation>

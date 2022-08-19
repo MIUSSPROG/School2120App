@@ -20,10 +20,10 @@ class ProfileDocumentsFragment: Fragment(R.layout.fragment_profile_documents) {
 
         binding = FragmentProfileDocumentsBinding.bind(view)
 
-        val profileInfo = args.profileInfo
+        val profileInfo = args.profileDocs
         val fragList = listOf(
-            DocumentSubscriptionFragment(profileInfo.docs),
-            DocumentSubscriptionFragment(profileInfo.docs)
+            DocumentSubscriptionFragment(profileInfo.subscribedDocs),
+            DocumentSubscriptionFragment(profileInfo.unsubscribedDocs)
         )
         val adapter = ProfileViewPagerAdapter(requireActivity(), fragList)
         binding.apply {
