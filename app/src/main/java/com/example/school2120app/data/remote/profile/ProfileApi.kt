@@ -20,6 +20,10 @@ interface ProfileApi {
     @GET
     suspend fun subscribeDocument(@Url url: String): ResponseBody
 
+    @GET
+    @Streaming
+    suspend fun downloadDocument(@Url url: String): ResponseBody
+
     companion object{
         const val BASE_URL = "http://intranet.sch2120-do.ru/api/"
     }

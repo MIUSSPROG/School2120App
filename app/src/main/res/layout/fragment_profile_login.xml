@@ -32,13 +32,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tvProfileLoginEmail"
+            android:id="@+id/tvProfileLoginName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_account"
             android:drawablePadding="15dp"
             android:fontFamily="@font/montserrat_medium"
-            android:hint="Email" />
+            android:hint="Логин" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout

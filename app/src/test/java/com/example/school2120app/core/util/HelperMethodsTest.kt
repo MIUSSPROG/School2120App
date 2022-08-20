@@ -28,4 +28,20 @@ class HelperMethodsTest{
             cancelAndConsumeRemainingEvents()
         }
     }
+
+    @Test
+    fun `test date in future`() = runBlocking {
+        val future = "25-08-2022"
+        val expected = HelperMethods.isDateToCome(future)
+        val actual = true
+        assertThat(expected).isEqualTo(actual)
+    }
+
+    @Test
+    fun `test date in past`() = runBlocking {
+        val future = "10-08-2022"
+        val expected = HelperMethods.isDateToCome(future)
+        val actual = false
+        assertThat(expected).isEqualTo(actual)
+    }
 }

@@ -9,6 +9,7 @@ import com.example.school2120app.domain.model.profile.ProfileDocs
 import com.example.school2120app.domain.model.profile.ProfileInfo
 import com.example.school2120app.domain.model.schedule.local.GradeLesson
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
 
 interface MainRepository {
     fun getNews(count: Int, query: String?, fetchFromRemote: Boolean): Flow<Resource<List<News>>>
@@ -20,4 +21,5 @@ interface MainRepository {
     fun getPreview(previewUrl: String): Flow<Resource<ImageSource>>
     fun getContacts(fetchFromRemote: Boolean): Flow<Resource<List<ContactInfo>>>
     fun signIn(login: String, password: String): Flow<Resource<ProfileDocs>>
+    fun downloadDocument(url: String): Flow<Resource<ByteArray>>
 }

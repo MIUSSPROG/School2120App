@@ -153,4 +153,10 @@ object AppModule {
     fun provideSignInUsecase(repository: MainRepository): SignInUsecase{
         return SignInUsecase(repository)
     }
+
+    @Provides
+    @Singleton
+    fun provideDownloadDocumentUsecase(repository: MainRepository): DownloadDocumentUsecase{
+        return DownloadDocumentUsecase(repository)
+    }
 }

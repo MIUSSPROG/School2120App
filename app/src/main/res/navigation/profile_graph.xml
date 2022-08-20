@@ -22,5 +22,17 @@
         <argument
             android:name="profileDocs"
             app:argType="com.example.school2120app.domain.model.profile.ProfileDocs" />
+        <action
+            android:id="@+id/action_profileDocumentsFragment_to_documentSubscriptionDetailFragment"
+            app:destination="@id/documentSubscriptionDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/documentSubscriptionDetailFragment"
+        android:name="com.example.school2120app.presentation.profile.DocumentSubscriptionDetailFragment"
+        android:label="fragment_document_subscription_detail"
+        tools:layout="@layout/fragment_document_subscription_detail" >
+        <argument
+            android:name="userDocToSubscribe"
+            app:argType="com.example.school2120app.domain.model.profile.UserDoc" />
     </fragment>
 </navigation>

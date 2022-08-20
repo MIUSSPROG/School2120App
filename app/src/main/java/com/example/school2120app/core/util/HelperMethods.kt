@@ -29,7 +29,7 @@ class HelperMethods(
             val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
             val date = LocalDate.parse(source, formatter).toEpochDay()
             val now = LocalDate.now().toEpochDay()
-            return date - now > 0
+            return date - now >= 0
         }
     }
 }

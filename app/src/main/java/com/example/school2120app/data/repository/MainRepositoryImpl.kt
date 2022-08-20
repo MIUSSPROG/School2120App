@@ -31,6 +31,7 @@ import com.example.school2120app.domain.repository.MainRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.ResponseBody
 import retrofit2.HttpException
 import java.io.IOException
 import java.sql.SQLException
@@ -179,6 +180,25 @@ class MainRepositoryImpl(
         }
     }
 
+    override fun downloadDocument(url: String): Flow<Resource<ByteArray>> = flow {
+        emit(Loading())
+        try {
+            val document = profileApi.downloadDocument(url)
+            emit(Success(data = document.byteStream().readBytes()))
+        }catch (e: HttpException) {
+            emit(Error("Ошибка сервера"))
+            Log.d("Error", e.message())
+        } catch (e: IOException) {
+            emit(Error("Отсутсвует интернет соединение"))
+            Log.d("Error", e.message!!)
+        }
+        catch (e: Exception){
+            emit(Error("Неизвестная ошибка"))
+            Log.d("Error", e.message!!)
+            Log.d("Error", e.stackTraceToString())
+        }
+    }
+
     private fun sortDocuments(profileInfo: ProfileInfo): ProfileDocs{
         val subscribedDocs = mutableListOf<UserDoc>()
         val unsubscribedDocs = mutableListOf<UserDoc>()
@@ -198,9 +218,9 @@ class MainRepositoryImpl(
                             continue@loop
                         }
                     }
-
                 }
             }
+            // документ считается неподписанным, если был только открыт
             unsubscribedDocs.add(curDoc)
         }
         profileDocs.subscribedDocs.addAll(subscribedDocs)

@@ -29,7 +29,7 @@ class ProfileLoginFragment: Fragment(R.layout.fragment_profile_login) {
         binding = FragmentProfileLoginBinding.bind(view)
         binding.apply {
             btnProfileLoginIn.setOnClickListener {
-                viewModel.signIn(tvProfileLoginEmail.text.toString(), tvProfileLoginPass.text.toString())
+                viewModel.signIn( tvProfileLoginName.text.toString(), tvProfileLoginPass.text.toString())
                 viewModel.signInLiveData.observe(viewLifecycleOwner){
                     when(it){
                         is Loading -> {
@@ -43,7 +43,6 @@ class ProfileLoginFragment: Fragment(R.layout.fragment_profile_login) {
                         is Error -> {
                             Snackbar.make(binding.root, "Ошибка входа", Snackbar.LENGTH_SHORT).show()
                             pbLogin.visibility = INVISIBLE
-
                         }
                     }
                 }
