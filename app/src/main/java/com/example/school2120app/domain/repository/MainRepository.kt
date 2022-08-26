@@ -22,4 +22,5 @@ interface MainRepository {
     fun getContacts(fetchFromRemote: Boolean): Flow<Resource<List<ContactInfo>>>
     fun signIn(login: String, password: String): Flow<Resource<ProfileDocs>>
     fun downloadDocument(url: String): Flow<Resource<ByteArray>>
+    fun subscribeDocument(url: String): Flow<Resource<String>>
 }

@@ -10,3 +10,7 @@ import com.google.android.material.snackbar.Snackbar
 fun Activity.toast(text: String, length: Int = Toast.LENGTH_SHORT){
     Toast.makeText(this, text, length).show()
 }
+
+fun Int.toBoolean(): Boolean{
+    return this == 1
+}

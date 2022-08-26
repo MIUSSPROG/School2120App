@@ -18,10 +18,20 @@ class Prefs(context: Context) {
         get() = sharedPref.getString(KEY_LETTER, null)
         set(value) = sharedPref.edit { putString(KEY_LETTER, value) }
 
+    var login: String?
+        get() = sharedPref.getString(KEY_LOGIN, null)
+        set(value) = sharedPref.edit { putString(KEY_LOGIN, value) }
+
+    var password: String?
+        get() = sharedPref.getString(KEY_PASSWORD, null)
+        set(value) = sharedPref.edit { putString(KEY_PASSWORD, value) }
+
     companion object{
         private const val PREFS_NAME = "myPrefs"
         private const val KEY_BUILDING = "keyBuilding"
         private const val KEY_GRADE = "keyGrade"
         private const val KEY_LETTER = "keyLetter"
+        private const val KEY_LOGIN = "keyLogin"
+        private const val KEY_PASSWORD = "keyPassword"
     }
 }

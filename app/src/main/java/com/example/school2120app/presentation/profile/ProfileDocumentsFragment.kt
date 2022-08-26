@@ -3,9 +3,11 @@ package com.example.school2120app.presentation.profile
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.school2120app.R
 import com.example.school2120app.databinding.FragmentProfileDocumentsBinding
+import com.example.school2120app.prefs
 import com.example.school2120app.presentation.profile.adapter.ProfileViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -20,7 +22,7 @@ class ProfileDocumentsFragment: Fragment(R.layout.fragment_profile_documents) {
 
         binding = FragmentProfileDocumentsBinding.bind(view)
 
-        val profileInfo = args.profileDocs
+        val profileInfo = args.profileDocs!!
         val fragList = listOf(
             DocumentSubscriptionFragment(profileInfo.subscribedDocs),
             DocumentSubscriptionFragment(profileInfo.unsubscribedDocs)
@@ -34,6 +36,13 @@ class ProfileDocumentsFragment: Fragment(R.layout.fragment_profile_documents) {
 
             tvStaffName.text = "${profileInfo.surname} ${profileInfo.name} ${profileInfo.patronymic}"
             tvStaffPosition.text = profileInfo.functionality
+
+            btnLogout.setOnClickListener {
+                prefs.login = null
+                prefs.password = null
+                val action = ProfileDocumentsFragmentDirections.actionProfileDocumentsFragmentToProfileFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 

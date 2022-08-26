@@ -186,6 +186,30 @@ class MainRepositoryImpl(
             val document = profileApi.downloadDocument(url)
             emit(Success(data = document.byteStream().readBytes()))
         }catch (e: HttpException) {
+            emit(Error("Не удалось открыть документ, возможно его нет"))
+            Log.d("Error", e.message())
+        } catch (e: IOException) {
+            emit(Error("Отсутсвует интернет соединение"))
+            Log.d("Error", e.message!!)
+        }
+        catch (e: Exception){
+            emit(Error("Неизвестная ошибка"))
+            Log.d("Error", e.message!!)
+            Log.d("Error", e.stackTraceToString())
+        }
+    }
+
+    override fun subscribeDocument(url: String): Flow<Resource<String>> = flow {
+        emit(Loading())
+        try {
+            val response = profileApi.subscribeDocument(url)
+            response.subscribed.let {
+                emit(Success(data = "Документ успешно подписан"))
+            }
+            response.unsubscribed.let {
+                emit(Success(data = "Отказ подписи"))
+            }
+        }catch (e: HttpException) {
             emit(Error("Ошибка сервера"))
             Log.d("Error", e.message())
         } catch (e: IOException) {

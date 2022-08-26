@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.school2120app.core.util.ActionListener
 import com.example.school2120app.core.util.HelperMethods
+import com.example.school2120app.core.util.toBoolean
 import com.example.school2120app.databinding.DocRvItemBinding
 import com.example.school2120app.domain.model.profile.UserDoc
 
@@ -20,7 +21,7 @@ class DocumentsAdapter(
             binding.apply {
                 tvDocNameRvItem.text = item.title
                 tvEndDateRvItem.text = item.endDate
-                if (HelperMethods.isDateToCome(item.endDate)){
+                if (HelperMethods.isDateToCome(item.endDate) || item.isSubscribe.toBoolean()){
                     tvExpiredRvItem.visibility = View.INVISIBLE
                 }else{
                     tvExpiredRvItem.visibility = View.VISIBLE

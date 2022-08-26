@@ -159,4 +159,10 @@ object AppModule {
     fun provideDownloadDocumentUsecase(repository: MainRepository): DownloadDocumentUsecase{
         return DownloadDocumentUsecase(repository)
     }
+
+    @Provides
+    @Singleton
+    fun provideSubscribeDocumentUsecase(repository: MainRepository): SubscribeDocumentUsecase{
+        return SubscribeDocumentUsecase(mainRepository = repository)
+    }
 }

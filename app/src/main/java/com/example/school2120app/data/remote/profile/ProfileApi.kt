@@ -2,6 +2,8 @@ package com.example.school2120app.data.remote.profile
 
 import com.example.school2120app.data.remote.profile.dto.ProfileInfoDto
 import com.example.school2120app.data.remote.profile.dto.StatInfoDto
+import com.example.school2120app.data.remote.profile.dto.SubscriptionDto
+import okhttp3.Response
 import okhttp3.ResponseBody
 import retrofit2.http.*
 
@@ -18,7 +20,7 @@ interface ProfileApi {
     suspend fun getUsersStat(): StatInfoDto
 
     @GET
-    suspend fun subscribeDocument(@Url url: String): ResponseBody
+    suspend fun subscribeDocument(@Url url: String): SubscriptionDto
 
     @GET
     @Streaming

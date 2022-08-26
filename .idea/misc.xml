@@ -6,14 +6,18 @@
         <entry key="app/src/main/res/drawable-v24/search_input_style.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/contact_round_recyclerview.xml" value="0.271" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_forward_ios_24.xml" value="0.2925" />
+        <entry key="app/src/main/res/drawable/ic_lock.xml" value="0.2285" />
+        <entry key="app/src/main/res/drawable/ic_percon.xml" value="0.2285" />
         <entry key="app/src/main/res/drawable/ic_school.xml" value="0.271" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.238" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.3421875" />
         <entry key="app/src/main/res/layout/contact_rv_item.xml" value="0.3142440795898436" />
+        <entry key="app/src/main/res/layout/dialog_subscribe.xml" value="0.24711415134672937" />
         <entry key="app/src/main/res/layout/doc_rv_item.xml" value="0.34843950406156476" />
         <entry key="app/src/main/res/layout/fragment_choose_options.xml" value="0.3390625" />
         <entry key="app/src/main/res/layout/fragment_contact_detail.xml" value="0.3385307654502709" />
         <entry key="app/src/main/res/layout/fragment_contacts.xml" value="0.29394836425781246" />
+        <entry key="app/src/main/res/layout/fragment_dialog_subscribe_doc.xml" value="0.271483539974348" />
         <entry key="app/src/main/res/layout/fragment_document_subscription.xml" value="0.25828905240140854" />
         <entry key="app/src/main/res/layout/fragment_document_subscription_detail.xml" value="0.21101694747187635" />
         <entry key="app/src/main/res/layout/fragment_menu.xml" value="0.3421875" />

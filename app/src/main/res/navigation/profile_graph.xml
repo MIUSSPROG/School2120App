@@ -21,10 +21,14 @@
         tools:layout="@layout/fragment_profile_documents" >
         <argument
             android:name="profileDocs"
-            app:argType="com.example.school2120app.domain.model.profile.ProfileDocs" />
+            app:argType="com.example.school2120app.domain.model.profile.ProfileDocs"
+            app:nullable="true" />
         <action
             android:id="@+id/action_profileDocumentsFragment_to_documentSubscriptionDetailFragment"
             app:destination="@id/documentSubscriptionDetailFragment" />
+        <action
+            android:id="@+id/action_profileDocumentsFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/documentSubscriptionDetailFragment"
@@ -34,5 +38,23 @@
         <argument
             android:name="userDocToSubscribe"
             app:argType="com.example.school2120app.domain.model.profile.UserDoc" />
+        <action
+            android:id="@+id/action_documentSubscriptionDetailFragment_to_dialogSubscriptionFragment"
+            app:destination="@id/dialogSubscriptionFragment" />
+        <action
+            android:id="@+id/action_documentSubscriptionDetailFragment_to_profileDocumentsFragment"
+            app:destination="@id/profileDocumentsFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/dialogSubscriptionFragment"
+        android:name="com.example.school2120app.presentation.profile.DialogSubscriptionFragment"
+        android:label="fragment_dialog_subscribe_doc"
+        tools:layout="@layout/fragment_dialog_subscribe_doc" >
+        <argument
+            android:name="userDoc"
+            app:argType="com.example.school2120app.domain.model.profile.UserDoc" />
+        <action
+            android:id="@+id/action_dialogSubscriptionFragment_to_profileDocumentsFragment"
+            app:destination="@id/profileDocumentsFragment" />
+    </dialog>
 </navigation>
