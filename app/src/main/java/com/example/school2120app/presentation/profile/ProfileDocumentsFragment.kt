@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.school2120app.R
 import com.example.school2120app.databinding.FragmentProfileDocumentsBinding
+import com.example.school2120app.domain.model.profile.ProfileDocs
 import com.example.school2120app.prefs
 import com.example.school2120app.presentation.profile.adapter.ProfileViewPagerAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -45,6 +46,8 @@ class ProfileDocumentsFragment: Fragment(R.layout.fragment_profile_documents) {
             }
         }
     }
+
+
 
     companion object{
         const val SIGNED = "Подписанные"

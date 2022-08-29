@@ -11,7 +11,7 @@ import com.example.school2120app.databinding.FragmentDocumentSubscriptionBinding
 import com.example.school2120app.domain.model.profile.UserDoc
 import com.example.school2120app.presentation.profile.adapter.DocumentsAdapter
 
-class DocumentSubscriptionFragment(val docs: MutableList<UserDoc>) : Fragment(R.layout.fragment_document_subscription) {
+class DocumentSubscriptionFragment() : Fragment(R.layout.fragment_document_subscription) {
 
     private lateinit var binding: FragmentDocumentSubscriptionBinding
     private val adapter by lazy { DocumentsAdapter(object : ActionListener<UserDoc> {
@@ -19,7 +19,20 @@ class DocumentSubscriptionFragment(val docs: MutableList<UserDoc>) : Fragment(R.
             val action = ProfileDocumentsFragmentDirections.actionProfileDocumentsFragmentToDocumentSubscriptionDetailFragment(item)
             findNavController().navigate(action)
         }
-    }) }
+    })
+    }
+    private var docs: ArrayList<UserDoc>? = null
+
+    constructor(docs: ArrayList<UserDoc>): this(){
+        this.docs = docs
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        savedInstanceState?.let {
+            docs = savedInstanceState.getParcelableArrayList(SAVED_DOCUMENTS)
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -28,6 +41,14 @@ class DocumentSubscriptionFragment(val docs: MutableList<UserDoc>) : Fragment(R.
             rvDocs.adapter = adapter
             adapter.submitList(docs)
         }
+    }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelableArrayList(SAVED_DOCUMENTS, docs)
+    }
+
+    companion object{
+        const val SAVED_DOCUMENTS = "saved_documents"
     }
 }

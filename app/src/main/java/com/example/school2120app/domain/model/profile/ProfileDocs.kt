@@ -12,6 +12,6 @@ data class ProfileDocs(
     val email: String,
     val place: String,
     val functionality: String,
-    val subscribedDocs: MutableList<UserDoc>,
-    val unsubscribedDocs: MutableList<UserDoc>
+    val subscribedDocs: ArrayList<UserDoc>,
+    val unsubscribedDocs: ArrayList<UserDoc>
 ): Parcelable

@@ -21,8 +21,8 @@ data class ProfileInfo(
             email = email,
             place = place,
             functionality = functionality,
-            mutableListOf<UserDoc>(),
-            mutableListOf<UserDoc>()
+            ArrayList<UserDoc>(),
+            ArrayList<UserDoc>()
         )
     }
 }
